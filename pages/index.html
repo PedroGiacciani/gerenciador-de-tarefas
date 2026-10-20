@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de tarefas</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <div id="separador">
+        <header>
+            <h1>Task Manager</h1>
+            <p>Gerencie suas tareafas. Organize seu dia</p>
+        </header>
+        <main>
+            <div id="salvar-tarefa">
+                <button id="add-tarefa">+ Nova tarefa</button>
+                <div id="modal" class="modal">
+                    <div class="modal-conteudo">
+                        <p>Nome da tarefa <input type="text" name="nome-tarefa" id="inome-tarefa" placeholder="Ex: Comprar GTA VI"></p>
+                        <p>Data conclusão <input type="date" name="data-conclusao" id="idata-conclusao"></p>
+                        <p>Descreva a tarefa <textarea name="descricao-tarefa" id="idescricao-tarefa" placeholder="Ex: Ir na loja da esquina comprar GTA VI por R$ 450,00"></textarea></p>
+                        <button id="save">Salvar</button>
+                    </div>
+                </div>
+            </div>
+            <div id="lista-tarefa">
+
+            </div>
+        </main>
+    </div>
+    <footer>
+        <p>@copy; Site desenvolvido por: <a href="https://github.com/pedrogiacciani">Pedro Giacciani</a></p>
+    </footer>
+</body>
+</html>
