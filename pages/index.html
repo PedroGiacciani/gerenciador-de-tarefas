@@ -24,13 +24,25 @@
                     </div>
                 </div>
             </div>
-            <div id="lista-tarefa">
+            <div id="area-tarefa">
+                <div id="area-pesquisa">
+                    <input type="text" name="pesquisar-tarefa" id="ipesquisar-tarefa" placeholder="Pesquisar por nome da tarefa">
+                    <select name="filtrar-tarefa" id="ifiltrar-tarefa">
+                        <option value="Todas">Todas</option>
+                        <option value="True">Concluídas</option>
+                        <option value="False">Em andamento</option>
+                    </select>
+                    <button id="btn-pesquisar-tarefa">Buscar</button>
+                </div>
+                <div id="lista-tarefas">
 
+                </div>
             </div>
         </main>
     </div>
     <footer>
-        <p>@copy; Site desenvolvido por: <a href="https://github.com/pedrogiacciani">Pedro Giacciani</a></p>
+        <p>&copy; Site desenvolvido por: <a href="https://github.com/pedrogiacciani" target="_blank">Pedro Giacciani</a></p>
     </footer>
+    <script type="module" src="scripts/app.js"></script>
 </body>
 </html>

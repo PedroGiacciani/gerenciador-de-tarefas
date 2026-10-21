@@ -69,6 +69,10 @@ main > div#salvar-tarefa > div#modal{
     justify-content: center;
 }
 
+main > div#salvar-tarefa > div#modal.aberto{
+    display: flex;
+}
+
 main > div#salvar-tarefa > div#modal > div.modal-conteudo{
     background-color: var(--background);
     padding: 20px;
@@ -82,10 +86,10 @@ main > div#salvar-tarefa > div#modal > div.modal-conteudo > p{
     line-height: 2em;
 }
 
-main > div#salvar-tarefa > div#modal > div.modal-conteudo > p > input{
+input, select{
     width: 100%;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 8px;
     border: 1px solid #D1D5DB;
     outline: none;
 }
@@ -98,4 +102,40 @@ main > div#salvar-tarefa > div#modal > div.modal-conteudo > p > textarea{
     border-radius: 5px;
     border-color: var(--border);
     padding: 5px;
+}
+
+main > div#area-tarefa > div#area-pesquisa{
+    margin: 20px 0px;
+}
+
+main > div#area-tarefa > div#area-pesquisa > input{
+    width: 51%;
+}
+
+main > div#area-tarefa > div#area-pesquisa > button{
+    width: 20%;
+    padding: 6px;
+}
+
+main > div#area-tarefa > div#area-pesquisa > select{
+    width: 27%;
+    padding: 8px;
+}
+
+footer{
+    background-color: var(--primary);
+    color: var(--surface);
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px 5px 0px 0px;
+}
+
+footer > p > a{
+    color: var(--surface);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+footer > p > a:hover{
+    text-decoration: underline;
 }
