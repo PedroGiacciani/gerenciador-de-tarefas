@@ -15,3 +15,16 @@ export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao){
         console.log(error)
     }
 }
+
+export async function carregarDados(){
+    try{
+        const response = await fetch('http://localhost:8080/api/tarefas')
+        var tarefas = response.json()
+        console.log(tarefas)
+        tarefas.forEach(element => {
+            console.log(element)
+        })
+    }catch(error){
+        console.log(error)
+    }
+}

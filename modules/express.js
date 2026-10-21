@@ -16,6 +16,15 @@ app.get('/', (req, res) => {
     })
 })
 
+app.get('/api/tarefas', async (req, res) => {
+    try{
+        const tarefas = await taskModel.find({})
+        res.status(200).json(tarefas)
+    }catch(error){
+        res.status(500).send(error.message)
+    }
+})
+
 app.post('/api/adicionar-tarefa', async (req, res) => {
     try{
         const tarefa = await taskModel.create(req.body)
