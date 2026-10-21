@@ -18,9 +18,12 @@
     "start:dev": "nodemon index.js"
   },
   "dependencies": {
+    "dotenv": "^18.0.8",
     "express": "^5.3.0",
     "fs": "^0.0.1-security",
     "http": "^0.0.1-security",
+    "mongoose": "^9.11.2",
+    "moongose": "^1.0.0",
     "nodemon": "^3.1.14",
     "path": "^0.12.7"
   }
