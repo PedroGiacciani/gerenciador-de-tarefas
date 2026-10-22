@@ -122,6 +122,58 @@ main > div#area-tarefa > div#area-pesquisa > select{
     padding: 8px;
 }
 
+main > div#area-tarefa > div#lista-tarefas{
+    text-align: center;
+}
+
+main > div#area-tarefa > div#lista-tarefas > div.card-tarefa{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.212);
+    border-radius: 8px;
+    margin: 10px 0px;
+}
+
+main > div#area-tarefa > div#lista-tarefas > div.card-tarefa > div.card-tarefa-sup{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+main > div#area-tarefa > div#lista-tarefas > div.card-tarefa > div.card-tarefa-sup > input{
+    width: 45px;
+}
+
+main > div#area-tarefa > div#lista-tarefas > div.card-tarefa > div.card-tarefa-inf{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
+    align-items: center;
+}
+
+div.card-tarefa-inf > p, div.card-tarefa-inf > div{
+    margin-top: 20px;
+}
+
+div.card-tarefa-inf > div{
+    width: 100%;
+}
+
+div.card-tarefa-inf > div > button{
+    width: 30%;
+    margin: 0px 5px;
+    font-size: 1em;
+}
+
+mark{
+    padding: 2px;
+    border-radius: 5px;
+}
+
 footer{
     background-color: var(--primary);
     color: var(--surface);
