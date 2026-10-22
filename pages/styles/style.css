@@ -79,10 +79,10 @@ main > div#salvar-tarefa > div#modal > div.modal-conteudo{
     border-radius: 10px;
 
     width: 450px;
-    height: 450px;
+    height: auto;
 }
 
-main > div#salvar-tarefa > div#modal > div.modal-conteudo > p{
+main > div#salvar-tarefa > div#modal > div.modal-conteudo p{
     line-height: 2em;
 }
 
@@ -94,7 +94,7 @@ input, select{
     outline: none;
 }
 
-main > div#salvar-tarefa > div#modal > div.modal-conteudo > p > textarea{
+main > div#salvar-tarefa > div#modal > div.modal-conteudo textarea{
     min-width: 100%;
     max-width: 100%;
     min-height: 180px;
@@ -102,6 +102,11 @@ main > div#salvar-tarefa > div#modal > div.modal-conteudo > p > textarea{
     border-radius: 5px;
     border-color: var(--border);
     padding: 5px;
+}
+
+.msg{
+    font-size: .8em;
+    color: var(--danger);
 }
 
 main > div#area-tarefa > div#area-pesquisa{

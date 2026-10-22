@@ -18,9 +18,18 @@
                 <button id="add-tarefa">+ Nova tarefa</button>
                 <div id="modal" class="modal">
                     <div class="modal-conteudo">
-                        <p>Nome da tarefa <input type="text" name="nome-tarefa" id="inome-tarefa" placeholder="Ex: Comprar GTA VI"></p>
-                        <p>Data conclusão <input type="date" name="data-conclusao" id="idata-conclusao"></p>
-                        <p>Descreva a tarefa <textarea name="descricao-tarefa" id="idescricao-tarefa" placeholder="Ex: Ir na loja da esquina comprar GTA VI por R$ 450,00"></textarea></p>
+                        <div id="area-nome-tarefa">
+                            <p>Nome da tarefa <input type="text" name="nome-tarefa" id="inome-tarefa" placeholder="Ex: Comprar GTA VI"></p>
+                            <p id="msg-nome-tarefa" class="msg"></p>
+                        </div>
+                        <div id="area-data-tarefa">
+                            <p>Data conclusão <input type="date" name="data-conclusao" id="idata-conclusao"></p>
+                            <p id="msg-data-tarefa" class="msg"></p>
+                        </div>
+                        <div id="area-descricao-tarefa">
+                            <p>Descreva a tarefa <textarea name="descricao-tarefa" id="idescricao-tarefa" placeholder="Ex: Ir na loja da esquina comprar GTA VI por R$ 450,00"></textarea></p>
+                            <p id="msg-descricao-tarefa" class="msg"></p>
+                        </div>
                         <button id="save">Salvar</button>
                     </div>
                 </div>
@@ -36,7 +45,7 @@
                     <button id="btn-pesquisar-tarefa">Buscar</button>
                 </div>
                 <div id="lista-tarefas">
-                    
+
                 </div>
             </div>
         </main>

@@ -1,20 +1,47 @@
 import { Tarefa } from './tarefa.js'
 
-export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao){
-    const tarefa = new Tarefa(nomeTarefa, dataConclusao, descricao)
-    try{
-        const resposta = await fetch('http://localhost:8080/api/adicionar-tarefa', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(tarefa)
-        })
-        console.log(tarefa)
-    }catch(error){
-        console.log(error)
+var data = new Date()
+var agora = `${data.toLocaleDateString('pt-br')}`
+console.log(agora)
+console.log(typeof(agora))
+
+var msgNome = document.getElementById('msg-nome-tarefa')
+var msgData = document.getElementById('msg-data-tarefa')
+var msgDesc = document.getElementById('msg-descricao-tarefa')
+
+export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, modal,){
+    var regexDataConclusao = /^(\d{4})-(0?[1-9]||1[0-2])-(0?[1-9]||[12][0-9]||3[01])$/
+    var regexDataAgora = /^(0?[1-9]||[12][0-9]||3[01])\/(0?[1-9]||1[0-2])\/(\d{4})$/
+    var validarDataConclusao = dataConclusao.replace(regexDataConclusao, `$1$2$3`)
+    var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
+
+    var dataCorreta = dataConclusao.replace(regexDataConclusao, `$3/$2/$1`)
+    if(nomeTarefa.length == 0){
+        msgNome.textContent = 'Campo obrigatório *'
+    }else if(dataConclusao.length == 0){
+        msgData.textContent = 'Campo obrigatório *'
+    }else if(Number(validarDataAgora) > Number(validarDataConclusao)){
+        msgData.textContent = 'Digite uma data válida *'
+    }else if(descricao.length == 0){
+        msgDesc.textContent = 'Campo obrigatório *'
+    }else{
+        modal.classList.remove('aberto')
+        const tarefa = new Tarefa(nomeTarefa, dataCorreta, descricao)
+        try{
+            const resposta = await fetch('http://localhost:8080/api/adicionar-tarefa', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(tarefa)
+            })
+            console.log(tarefa)
+            carregarDados()
+        }catch(error){
+            console.log(error)
+        }
+
     }
-    carregarDados()
 }
 
 export async function carregarDados(){
