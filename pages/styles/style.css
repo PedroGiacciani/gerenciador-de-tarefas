@@ -117,9 +117,13 @@ main > div#area-tarefa > div#area-pesquisa > input{
     width: 51%;
 }
 
-main > div#area-tarefa > div#area-pesquisa > button{
+main > div#area-tarefa > div#area-pesquisa > button#btn-pesquisar-tarefa{
     width: 20%;
     padding: 6px;
+}
+
+main > div#area-tarefa > div#area-pesquisa > button#btn-excluir-todas{
+    margin-top: 20px;
 }
 
 main > div#area-tarefa > div#area-pesquisa > select{
@@ -138,6 +142,11 @@ main > div#area-tarefa > div#lista-tarefas > div.card-tarefa{
     border: 1px solid rgba(0, 0, 0, 0.212);
     border-radius: 8px;
     margin: 10px 0px;
+    cursor: pointer;
+}
+
+main > div#area-tarefa > div#lista-tarefas > div.card-tarefa:hover{
+    border: 2px solid var(--secondary);
 }
 
 main > div#area-tarefa > div#lista-tarefas > div.card-tarefa > div.card-tarefa-sup{
@@ -152,12 +161,15 @@ main > div#area-tarefa > div#lista-tarefas > div.card-tarefa > div.card-tarefa-s
 }
 
 main > div#area-tarefa > div#lista-tarefas > div.card-tarefa > div.card-tarefa-inf{
-    display: flex;
     flex-direction: column;
     justify-content: space-between;
     width: 100%;
     margin-top: 10px;
     align-items: center;
+}
+
+.aberto{
+    display: flex;
 }
 
 div.card-tarefa-inf > p, div.card-tarefa-inf > div{
@@ -175,8 +187,8 @@ div.card-tarefa-inf > div > button{
 }
 
 mark{
-    padding: 2px;
-    border-radius: 5px;
+    padding: 5px;
+    border-radius: 8px;
 }
 
 footer{

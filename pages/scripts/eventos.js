@@ -9,12 +9,12 @@ var msgNome = document.getElementById('msg-nome-tarefa')
 var msgData = document.getElementById('msg-data-tarefa')
 var msgDesc = document.getElementById('msg-descricao-tarefa')
 
+var regexDataConclusao = /^(\d{4})-(0?[1-9]||1[0-2])-(0?[1-9]||[12][0-9]||3[01])$/
+var regexDataAgora = /^(0?[1-9]||[12][0-9]||3[01])\/(0?[1-9]||1[0-2])\/(\d{4})$/
+
 export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, modal,){
-    var regexDataConclusao = /^(\d{4})-(0?[1-9]||1[0-2])-(0?[1-9]||[12][0-9]||3[01])$/
-    var regexDataAgora = /^(0?[1-9]||[12][0-9]||3[01])\/(0?[1-9]||1[0-2])\/(\d{4})$/
     var validarDataConclusao = dataConclusao.replace(regexDataConclusao, `$1$2$3`)
     var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
-
     var dataCorreta = dataConclusao.replace(regexDataConclusao, `$3/$2/$1`)
     if(nomeTarefa.length == 0){
         msgNome.textContent = 'Campo obrigatório *'
@@ -71,16 +71,24 @@ function criarCardTarefa(element, areaListaTarefas){
     cardTarefaSup.classList.add('card-tarefa-sup')
     var cardTarefaInf = document.createElement('div')
     cardTarefaInf.classList.add('card-tarefa-inf')
+    cardTarefaInf.style.display = 'none'
 
     var statusTarefa = document.createElement('p')
     var markStatusTarefa = document.createElement('mark')
     statusTarefa.appendChild(markStatusTarefa)
+
+    var validarDataConclusao = element.dataConclusao.replace(regexDataConclusao, `$1$2$3`)
+    var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
+
     if(element.concluida == true){
         markStatusTarefa.textContent = "Concluído"
         markStatusTarefa.style.background = '#22C55E'
     }else if(element.concluida == false){
         markStatusTarefa.textContent = "Em andamento"
         markStatusTarefa.style.background = '#EF4444'
+    }else if(element.concluida == false && Number(validarDataAgora) > Number(validarDataConclusao)){
+        markStatusTarefa.textContent = "Atrasada"
+        markStatusTarefa.style.background = '#F59E0B'
     }
 
     var nomeTarefa = document.createElement('p')
@@ -116,4 +124,14 @@ function criarCardTarefa(element, areaListaTarefas){
     cardTarefa.appendChild(cardTarefaSup)
     cardTarefa.appendChild(cardTarefaInf)
     areaListaTarefas.appendChild(cardTarefa)
+
+    cardTarefa.addEventListener('click', (event) => {
+        if(event.target != checkBox){
+            if(cardTarefaInf.style.display == 'none'){
+                cardTarefaInf.style.display = 'flex'
+            }else if(cardTarefaInf.style.display == 'flex' && event.target != editar && event.target != excluir){
+                cardTarefaInf.style.display = 'none'
+            }
+        }
+    })
 }

@@ -22,6 +22,7 @@ btnAddTarefa.addEventListener('click', () => {
     dataConclusao.value = ''
     descricao.value = ''
     modalContainer.classList.add('aberto') //Abre a caixa de cadastro de tarefa
+    nomeTarefa.focus()
 })
 
 modalContainer.addEventListener('click', (event) => {
@@ -36,12 +37,6 @@ modalContainer.addEventListener('click', (event) => {
 
 btnSaveTarefa.addEventListener('click', () => {
     adicionarTarefa(nomeTarefa.value, dataConclusao.value, descricao.value, modalContainer)
-})
-
-nomeTarefa.addEventListener('keypress', (event) => {
-    if(event.key == 'Enter'){
-
-    }
 })
 
 carregarDados()
