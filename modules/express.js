@@ -34,6 +34,16 @@ app.post('/api/adicionar-tarefa', async (req, res) => {
     }
 })
 
+app.delete('/api/deletar-tarefa/:id', async(req, res) => {
+    try{
+        let id = req.params.id
+        const tarefaDeletada = await taskModel.findByIdAndDelete(id)
+        res.status(200).json(tarefaDeletada)
+    }catch(error){
+        console.log(error)
+        res.status(500).send(error.message)
+    }
+})
 
 const port = 8080
 app.listen(port, () => console.log(`Running in port ${port}`))

@@ -1,5 +1,5 @@
 //Importações
-import { adicionarTarefa, carregarDados } from "./eventos.js"
+import { adicionarTarefa, carregarDados, excluirTodasTarefas } from "./eventos.js"
 
 //Declaração de váriaveis
 var btnAddTarefa = document.getElementById('add-tarefa')
@@ -13,6 +13,8 @@ var descricao = document.getElementById('idescricao-tarefa')
 var msgNome = document.getElementById('msg-nome-tarefa')
 var msgData = document.getElementById('msg-data-tarefa')
 var msgDesc = document.getElementById('msg-descricao-tarefa')
+
+var btnExcluirTodas = document.getElementById('btn-excluir-todas')
 
 btnAddTarefa.addEventListener('click', () => {
     msgNome.textContent = ``
@@ -39,4 +41,8 @@ btnSaveTarefa.addEventListener('click', () => {
     adicionarTarefa(nomeTarefa.value, dataConclusao.value, descricao.value, modalContainer)
 })
 
+btnExcluirTodas.addEventListener('click', () => excluirTodasTarefas())
+
+
 carregarDados()
+
