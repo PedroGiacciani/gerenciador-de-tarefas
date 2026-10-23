@@ -104,6 +104,10 @@ main > div#salvar-tarefa > div#modal > div.modal-conteudo textarea{
     padding: 5px;
 }
 
+main > div#salvar-tarefa > div#modal > div.modal-conteudo > button#update{
+    display: none;
+}
+
 .msg{
     font-size: .8em;
     color: var(--danger);

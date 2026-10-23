@@ -112,6 +112,7 @@ function criarCardTarefa(element, areaListaTarefas){
 
     var editar = document.createElement('button')
     editar.textContent = 'Editar'
+    editar.addEventListener('click', () => editarTarefa(element))
     var excluir = document.createElement('button')
     excluir.textContent = 'Excluir'
     excluir.addEventListener('click', () => excluirTarefa(element))
@@ -168,4 +169,19 @@ function excluirTarefa(element){
         })
     }
     carregarDados()
+}
+
+function editarTarefa(element){
+    var modal = document.getElementById('modal')
+    var btnAtualizar = document.getElementById('update')
+    var btnSaveTarefa = document.getElementById('save')
+    var nomeTarefa = document.getElementById('inome-tarefa')
+    var dataConclusao = document.getElementById('idata-conclusao')
+    var descricao = document.getElementById('idescricao-tarefa')
+    modal.classList.add('aberto')
+    btnSaveTarefa.style.display = 'none'
+    btnAtualizar.style.display = 'block'
+    nomeTarefa.value = element.nome
+    dataConclusao.value = element.dataConclusao
+    descricao.value = element.descricao
 }

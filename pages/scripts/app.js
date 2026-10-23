@@ -5,6 +5,7 @@ import { adicionarTarefa, carregarDados, excluirTodasTarefas } from "./eventos.j
 var btnAddTarefa = document.getElementById('add-tarefa')
 var modalContainer = document.getElementById('modal')
 var btnSaveTarefa = document.getElementById('save')
+var btnAtualizarTarefa = document.getElementById('update')
 
 var nomeTarefa = document.getElementById('inome-tarefa')
 var dataConclusao = document.getElementById('idata-conclusao')
@@ -24,6 +25,8 @@ btnAddTarefa.addEventListener('click', () => {
     dataConclusao.value = ''
     descricao.value = ''
     modalContainer.classList.add('aberto') //Abre a caixa de cadastro de tarefa
+    btnSaveTarefa.style.display = 'block'
+    btnAtualizarTarefa.style.display = 'none'
     nomeTarefa.focus()
 })
 

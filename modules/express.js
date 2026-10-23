@@ -2,6 +2,7 @@ const fs = require('fs')
 const express = require('express')
 const taskModel = require('../src/models/taskModel')
 const { error } = require('console')
+const { castObject } = require('moongose/models/user_model')
 
 const app = express()
 app.use(express.static("./pages")) //Procura as páginas 
@@ -34,13 +35,23 @@ app.post('/api/adicionar-tarefa', async (req, res) => {
     }
 })
 
-app.delete('/api/deletar-tarefa/:id', async(req, res) => {
+app.delete('/api/deletar-tarefa/:id', async (req, res) => {
     try{
         let id = req.params.id
         const tarefaDeletada = await taskModel.findByIdAndDelete(id)
         res.status(200).json(tarefaDeletada)
     }catch(error){
         console.log(error)
+        res.status(500).send(error.message)
+    }
+})
+
+app.patch('/api/editar-tarefa/:id', async (req, res) => {
+    try{
+        let id = req.params.id
+        const tarefaEditada = await taskModel.findByIdAndUpdate(id, req.body, {new: true})
+        res.status(200).json(tarefaEditada)
+    }catch(error){
         res.status(500).send(error.message)
     }
 })
