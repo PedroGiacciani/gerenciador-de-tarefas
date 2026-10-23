@@ -10,6 +10,8 @@ var msgDesc = document.getElementById('msg-descricao-tarefa')
 var regexDataConclusao = /^(\d{4})-(0?[1-9]||1[0-2])-(0?[1-9]||[12][0-9]||3[01])$/
 var regexDataAgora = /^(0?[1-9]||[12][0-9]||3[01])\/(0?[1-9]||1[0-2])\/(\d{4})$/
 
+var idEditado = null
+
 export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, modal,){
     var validarDataConclusao = dataConclusao.replace(regexDataConclusao, `$1$2$3`)
     var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
@@ -112,7 +114,7 @@ function criarCardTarefa(element, areaListaTarefas){
 
     var editar = document.createElement('button')
     editar.textContent = 'Editar'
-    editar.addEventListener('click', () => editarTarefa(element))
+    editar.addEventListener('click', () => abrirEditorTarefa(element))
     var excluir = document.createElement('button')
     excluir.textContent = 'Excluir'
     excluir.addEventListener('click', () => excluirTarefa(element))
@@ -171,7 +173,7 @@ function excluirTarefa(element){
     carregarDados()
 }
 
-function editarTarefa(element){
+function abrirEditorTarefa(element){
     var modal = document.getElementById('modal')
     var btnAtualizar = document.getElementById('update')
     var btnSaveTarefa = document.getElementById('save')
@@ -184,4 +186,26 @@ function editarTarefa(element){
     nomeTarefa.value = element.nome
     dataConclusao.value = element.dataConclusao
     descricao.value = element.descricao
+
+    idEditado = element._id
+}
+
+export async function editarTarefa(nomeTarefa, dataConclusao, descricao, modal){
+    var tarefaEditada = new Tarefa(nomeTarefa, dataConclusao, descricao)
+    try{
+        const promise = await fetch(`http://localhost:8080/api/editar-tarefa/${idEditado}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify(tarefaEditada)
+        })
+        if(!promise.ok){
+            throw new Error('Não foi possível editar a tarefa')
+        }
+        modal.classList.remove('aberto')
+        carregarDados()
+    }catch(error){
+        console.log(error)
+    }
 }

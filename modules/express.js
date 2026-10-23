@@ -49,7 +49,7 @@ app.delete('/api/deletar-tarefa/:id', async (req, res) => {
 app.patch('/api/editar-tarefa/:id', async (req, res) => {
     try{
         let id = req.params.id
-        const tarefaEditada = await taskModel.findByIdAndUpdate(id, req.body, {new: true})
+        const tarefaEditada = await taskModel.findByIdAndUpdate(id, req.body, {returnDocument: 'after'})
         res.status(200).json(tarefaEditada)
     }catch(error){
         res.status(500).send(error.message)

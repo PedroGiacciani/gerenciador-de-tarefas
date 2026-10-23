@@ -1,5 +1,5 @@
 //Importações
-import { adicionarTarefa, carregarDados, excluirTodasTarefas } from "./eventos.js"
+import { adicionarTarefa, carregarDados, editarTarefa, excluirTodasTarefas } from "./eventos.js"
 
 //Declaração de váriaveis
 var btnAddTarefa = document.getElementById('add-tarefa')
@@ -46,6 +46,9 @@ btnSaveTarefa.addEventListener('click', () => {
 
 btnExcluirTodas.addEventListener('click', () => excluirTodasTarefas())
 
+btnAtualizarTarefa.addEventListener('click', () => {
+    editarTarefa(nomeTarefa.value, dataConclusao.value, descricao.value, modalContainer)
+})
 
 carregarDados()
 
