@@ -27,7 +27,7 @@ export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, moda
         msgDesc.textContent = 'Campo obrigatório *'
     }else{
         modal.classList.remove('aberto')
-        const tarefa = new Tarefa(nomeTarefa, dataConclusao, descricao)
+        const tarefa = new Tarefa(nomeTarefa, dataConclusao, descricao, false)
         try{
             const resposta = await fetch('http://localhost:8080/api/adicionar-tarefa', {
                 method: 'POST',
@@ -82,28 +82,34 @@ function criarCardTarefa(element, areaListaTarefas){
     console.log(validarDataAgora)
     console.log(validarDataConclusao)
     
+    var checkBox = document.createElement('input')
+    checkBox.type = 'checkbox'
+    checkBox.addEventListener('change', () => mudarStatusTarefa(checkBox,element))
+    console.log(checkBox.checked)
+    
     if(element.concluida == true){
         markStatusTarefa.textContent = "Concluído"
         markStatusTarefa.style.background = '#22C55E'
+        checkBox.checked = true
     }else if(element.concluida == false && Number(validarDataAgora) > Number(validarDataConclusao)){
         markStatusTarefa.textContent = "Atrasada"
         markStatusTarefa.style.background = '#F59E0B'
+        checkBox.checked = false
     }else if(element.concluida == false){
         markStatusTarefa.textContent = "Em andamento"
         markStatusTarefa.style.background = '#EF4444'
+        checkBox.checked = false
     }
 
     var nomeTarefa = document.createElement('p')
     nomeTarefa.textContent = `${element.nome}`
-
-    var checkBox = document.createElement('input')
-    checkBox.type = 'checkbox'
 
     cardTarefaSup.appendChild(statusTarefa)
     cardTarefaSup.appendChild(nomeTarefa)
     cardTarefaSup.appendChild(checkBox)
 
     var descricaoTarefa = document.createElement('p')
+    descricaoTarefa.classList.add('descricao')
     descricaoTarefa.textContent = `${element.descricao}`
     
     var dataCorreta = element.dataConclusao.replace(regexDataConclusao, `$3/$2/$1`)
@@ -208,4 +214,21 @@ export async function editarTarefa(nomeTarefa, dataConclusao, descricao, modal){
     }catch(error){
         console.log(error)
     }
+}
+
+async function mudarStatusTarefa(check, element){
+    try{
+        console.log(element._id)
+        const tarefaConcluida = new Tarefa(element.nome, element.dataConclusao, element.descricao, check.checked)
+        const concluirTarefa = await fetch(`http://localhost:8080/api/mudar-status-tarefa/${element._id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            }, 
+            body: JSON.stringify(tarefaConcluida)
+        })
+    }catch(error){
+        console.log(error)
+    }
+    carregarDados()
 }

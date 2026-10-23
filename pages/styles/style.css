@@ -172,6 +172,10 @@ main > div#area-tarefa > div#lista-tarefas > div.card-tarefa > div.card-tarefa-i
     align-items: center;
 }
 
+.descricao{
+    width: 90%;
+}
+
 .aberto{
     display: flex;
 }

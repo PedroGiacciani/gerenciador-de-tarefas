@@ -56,5 +56,15 @@ app.patch('/api/editar-tarefa/:id', async (req, res) => {
     }
 })
 
+app.patch('/api/mudar-status-tarefa/:id', async (req, res) => {
+    try{
+        let id = req.params.id
+        let mudarStatus = await taskModel.findByIdAndUpdate(id, req.body, {returnDocument: 'after'})
+        res.status(200).json(mudarStatus)
+    }catch(error){
+        res.status(500).send(error.message)
+    }
+})
+
 const port = 8080
 app.listen(port, () => console.log(`Running in port ${port}`))

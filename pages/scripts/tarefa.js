@@ -1,8 +1,8 @@
 export class Tarefa{
-    constructor(nome, dataConclusao, descricao){
+    constructor(nome, dataConclusao, descricao, concluida){
         this.nome = nome
         this.dataConclusao = dataConclusao
         this.descricao = descricao
-        this.concluida = false
+        this.concluida = concluida
     }
 }
