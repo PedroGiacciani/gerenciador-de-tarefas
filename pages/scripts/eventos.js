@@ -1,5 +1,7 @@
+//Importações
 import { Tarefa } from './tarefa.js'
 
+//Declaração de variáveis
 var data = new Date()
 var agora = `${data.toLocaleDateString('pt-br')}`
 
@@ -12,33 +14,35 @@ var regexDataAgora = /^(0?[1-9]||[12][0-9]||3[01])\/(0?[1-9]||1[0-2])\/(\d{4})$/
 
 var idEditado = null
 
+//Função para adicionar uma nova tarefa
 export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, modal,){
+    //Declaração de Variáveis
     var validarDataConclusao = dataConclusao.replace(regexDataConclusao, `$1$2$3`)
     var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
-    if(nomeTarefa.length == 0){
+    if(nomeTarefa.length == 0){ //Verifica se o nome foi devidamente escrito e dispara uma mensagem
         msgNome.textContent = 'Campo obrigatório *'
-    }else if(nomeTarefa.length > 40){
+    }else if(nomeTarefa.length > 40){ //Verifica se o nome foi devidamente escrito e dispara uma mensagem
         msgNome.textContent = 'O nome não pode ultrapassar 40 caracteres *'
-    }else if(dataConclusao.length == 0){
-        msgData.textContent = 'Campo obrigatório *'
-    }else if(Number(validarDataAgora) > Number(validarDataConclusao)){
+    }else if(dataConclusao.length == 0){ //Verifica se a data é válida e dispara uma mensagem
+        msgData.textContent = 'Campo obrigatório *' 
+    }else if(Number(validarDataAgora) > Number(validarDataConclusao)){ //Verifica se a data é válida e dispara uma mensagem
         msgData.textContent = 'Digite uma data válida *'
-    }else if(descricao.length == 0){
+    }else if(descricao.length == 0){ //Verifica se a descrição foi devidamente escrita e dispara uma mensagem
         msgDesc.textContent = 'Campo obrigatório *'
     }else{
-        modal.classList.remove('aberto')
-        const tarefa = new Tarefa(nomeTarefa.toLowerCase(), dataConclusao, descricao, false)
+        modal.classList.remove('aberto') //fecha o modal de cadastro de tarefa
+        const tarefa = new Tarefa(nomeTarefa.toLowerCase(), dataConclusao, descricao, false) //Cria um objeto tarefa (apenas para modelar o envio ao Db)
         try{
-            const resposta = await fetch('http://localhost:8080/api/adicionar-tarefa', {
-                method: 'POST',
+            const resposta = await fetch('http://localhost:8080/api/adicionar-tarefa', { //Requisição POST para adicionar a tarefa
+                method: 'POST', //Método
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json' //Cabeçalho, indica o tipo de conteúdo que vai ser enviado via req
                 },
-                body: JSON.stringify(tarefa)
+                body: JSON.stringify(tarefa) //Envia a tarefa como corpo da req
             })
-            carregarDados()
+            carregarDados() //Carrega os dados
         }catch(error){
-            console.log(error)
+            console.log(error) //Necessário atualização!
         }
 
     }

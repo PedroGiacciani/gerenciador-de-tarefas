@@ -27,19 +27,25 @@ var btnExcluirTodas = document.getElementById('btn-excluir-todas')
 var filtroTarefa = document.getElementById('ifiltrar-tarefa')
 var pesquisaTarefa = document.getElementById('ipesquisar-tarefa')
 
+//Função que abre o modal de cadastro de tarefa
 btnAddTarefa.addEventListener('click', () => {
-    msgNome.textContent = ``
+    //Inicia o modal com os campos vazios
+    msgNome.textContent = `` 
     msgData.textContent = ``
     msgDesc.textContent = ``
     nomeTarefa.value = ''
     dataConclusao.value = ''
     descricao.value = ''
-    modalContainer.classList.add('aberto') //Abre a caixa de cadastro de tarefa
-    btnSaveTarefa.style.display = 'block'
+    //Abre a caixa de cadastro de tarefa
+    modalContainer.classList.add('aberto') 
+    //Mostra o botão de salvar e não o de atualizar (usado para editar a tarefa)
+    btnSaveTarefa.style.display = 'block' 
     btnAtualizarTarefa.style.display = 'none'
+    //Coloca o foco do mouse no campo de digitar o nome
     nomeTarefa.focus()
 })
 
+//Fecha o modal de cadastro quando clicar fora dele
 modalContainer.addEventListener('click', (event) => {
     if(modalContainer.className == 'modal aberto' && event.target === modalContainer){ //Fecha a caixa se ela estiver aberta e se clicar fora dela
         modalContainer.classList.remove('aberto')
@@ -50,22 +56,20 @@ modalContainer.addEventListener('click', (event) => {
     }
 })
 
-btnSaveTarefa.addEventListener('click', () => {
-    adicionarTarefa(nomeTarefa.value, dataConclusao.value, descricao.value, modalContainer)
-})
+//Chama a função de adicionar tarefa
+btnSaveTarefa.addEventListener('click', () => adicionarTarefa(nomeTarefa.value, dataConclusao.value, descricao.value, modalContainer))
 
+//Chama a função de excluir todas as tarefas
 btnExcluirTodas.addEventListener('click', () => excluirTodasTarefas())
 
-btnAtualizarTarefa.addEventListener('click', () => {
-    editarTarefa(nomeTarefa.value, dataConclusao.value, descricao.value, modalContainer)
-})
+//Chama a função de editar a tarefa
+btnAtualizarTarefa.addEventListener('click', () => editarTarefa(nomeTarefa.value, dataConclusao.value, descricao.value, modalContainer))
 
-filtroTarefa.addEventListener('change', () => {
-    filtrarTarefas(filtroTarefa)
-})
+//Chama a função de filtrar a tarefa
+filtroTarefa.addEventListener('change', () => filtrarTarefas(filtroTarefa))
 
-pesquisaTarefa.addEventListener('input', () => {
-    pesquisarTarefa(pesquisaTarefa.value)
-})
+//Chama a função de pesquisar a tarefa
+pesquisaTarefa.addEventListener('input', () => pesquisarTarefa(pesquisaTarefa.value))
 
+//Carrega os dados e puxa todas as tarefas que já estiverem cadastradas
 carregarDados()
