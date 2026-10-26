@@ -1,0 +1,44 @@
+@charset "UTF-8";
+
+/*
+TUDO QUE SE ALTERA NO MEDIA QUERRY:
+main > div#salvar-tarefa > button#add-tarefa
+
+main > div#area-tarefa > div#area-pesquisa > input
+main > div#area-tarefa > div#area-pesquisa > select
+main > div#area-tarefa > div#area-pesquisa > button#excluir-todas
+
+main > div#area-tarefa > div#lista-tarefas > div.card-tarefa
+main > div#area-tarefa > div#lista-tarefas > div.card-tarefa > div.card-tarefa-sup > p > mark
+main > div#area-tarefa > div#lista-tarefas > div.card-tarefa > div.card-tarefa-sup > input
+
+MEDIDAS:
+400 < X <
+
+*/
+
+@media screen and (min-width: 457px) and (max-width: 999px){
+    main > div#area-tarefa > div#lista-tarefas > div.card-tarefa > div.card-tarefa-sup{
+        font-size: 1.3em;
+    }
+}
+
+@media screen and (min-width: 1000px){
+    main > div#area-tarefa > div#lista-tarefas > div.card-tarefa > div.card-tarefa-sup{
+        font-size: 1.5em;
+    }
+
+    main > div#area-tarefa > div#lista-tarefas > div.card-tarefa > div.card-tarefa-inf{
+        font-size: 1.3em;
+    }
+
+    main > div#area-tarefa > div#lista-tarefas > p{
+        font-size: 1.6em;
+    }
+}
+
+@media screen and (min-width: 1700px){
+    main{
+        margin: auto;
+    }
+}

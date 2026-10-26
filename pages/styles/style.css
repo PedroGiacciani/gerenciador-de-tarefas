@@ -40,10 +40,12 @@ body{
 
 header{
     margin: 20px 0px 20px 10px;
+    max-width: 1700px;
 }
 
 main{
     margin: 10px;
+    max-width: 1700px;
 }
 
 button{
@@ -118,7 +120,7 @@ main > div#area-tarefa > div#area-pesquisa{
 }
 
 main > div#area-tarefa > div#area-pesquisa > input{
-    width: 72%;
+    width: 71%;
 }
 
 main > div#area-tarefa > div#area-pesquisa > button#btn-excluir-todas{
@@ -159,6 +161,10 @@ main > div#area-tarefa > div#lista-tarefas > div.card-tarefa > div.card-tarefa-s
     width: 45px;
 }
 
+main > div#area-tarefa > div#lista-tarefas > div.card-tarefa > div.card-tarefa-sup > p{
+    font-size: .8em;
+}
+
 main > div#area-tarefa > div#lista-tarefas > div.card-tarefa > div.card-tarefa-inf{
     flex-direction: column;
     justify-content: space-between;
@@ -190,8 +196,9 @@ div.card-tarefa-inf > div > button{
 }
 
 mark{
-    padding: 5px;
+    padding: 2px;
     border-radius: 8px;
+    font-size: .85em;
 }
 
 footer{
