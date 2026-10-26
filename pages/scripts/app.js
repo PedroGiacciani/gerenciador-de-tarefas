@@ -57,7 +57,13 @@ modalContainer.addEventListener('click', (event) => {
 })
 
 //Chama a função de adicionar tarefa
-btnSaveTarefa.addEventListener('click', () => adicionarTarefa(nomeTarefa.value, dataConclusao.value, descricao.value, modalContainer))
+btnSaveTarefa.addEventListener('click', () => {
+    msgNome.textContent = ``
+    msgData.textContent = ``
+    msgDesc.textContent = ``
+    adicionarTarefa(nomeTarefa.value, dataConclusao.value, descricao.value, modalContainer)
+    
+})
 
 //Chama a função de excluir todas as tarefas
 btnExcluirTodas.addEventListener('click', () => excluirTodasTarefas())
