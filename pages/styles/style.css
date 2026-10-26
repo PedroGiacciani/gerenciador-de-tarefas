@@ -118,12 +118,7 @@ main > div#area-tarefa > div#area-pesquisa{
 }
 
 main > div#area-tarefa > div#area-pesquisa > input{
-    width: 51%;
-}
-
-main > div#area-tarefa > div#area-pesquisa > button#btn-pesquisar-tarefa{
-    width: 20%;
-    padding: 6px;
+    width: 72%;
 }
 
 main > div#area-tarefa > div#area-pesquisa > button#btn-excluir-todas{

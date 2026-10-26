@@ -1,5 +1,12 @@
 //Importações
-import { adicionarTarefa, carregarDados, editarTarefa, excluirTodasTarefas } from "./eventos.js"
+import { 
+    adicionarTarefa,
+    carregarDados,
+    editarTarefa,
+    excluirTodasTarefas,
+    filtrarTarefas,
+    pesquisarTarefa
+} from "./eventos.js"
 
 //Declaração de váriaveis
 var btnAddTarefa = document.getElementById('add-tarefa')
@@ -16,6 +23,9 @@ var msgData = document.getElementById('msg-data-tarefa')
 var msgDesc = document.getElementById('msg-descricao-tarefa')
 
 var btnExcluirTodas = document.getElementById('btn-excluir-todas')
+
+var filtroTarefa = document.getElementById('ifiltrar-tarefa')
+var pesquisaTarefa = document.getElementById('ipesquisar-tarefa')
 
 btnAddTarefa.addEventListener('click', () => {
     msgNome.textContent = ``
@@ -50,5 +60,12 @@ btnAtualizarTarefa.addEventListener('click', () => {
     editarTarefa(nomeTarefa.value, dataConclusao.value, descricao.value, modalContainer)
 })
 
-carregarDados()
+filtroTarefa.addEventListener('change', () => {
+    filtrarTarefas(filtroTarefa)
+})
 
+pesquisaTarefa.addEventListener('input', () => {
+    pesquisarTarefa(pesquisaTarefa.value)
+})
+
+carregarDados()

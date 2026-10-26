@@ -27,7 +27,7 @@ export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, moda
         msgDesc.textContent = 'Campo obrigatório *'
     }else{
         modal.classList.remove('aberto')
-        const tarefa = new Tarefa(nomeTarefa, dataConclusao, descricao, false)
+        const tarefa = new Tarefa(nomeTarefa.toLowerCase(), dataConclusao, descricao, false)
         try{
             const resposta = await fetch('http://localhost:8080/api/adicionar-tarefa', {
                 method: 'POST',
@@ -79,13 +79,10 @@ function criarCardTarefa(element, areaListaTarefas){
 
     var validarDataConclusao = element.dataConclusao.replace(regexDataConclusao, `$1$2$3`)
     var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
-    console.log(validarDataAgora)
-    console.log(validarDataConclusao)
-    
+        
     var checkBox = document.createElement('input')
     checkBox.type = 'checkbox'
     checkBox.addEventListener('change', () => mudarStatusTarefa(checkBox,element))
-    console.log(checkBox.checked)
     
     if(element.concluida == true){
         markStatusTarefa.textContent = "Concluído"
@@ -218,7 +215,6 @@ export async function editarTarefa(nomeTarefa, dataConclusao, descricao, modal){
 
 async function mudarStatusTarefa(check, element){
     try{
-        console.log(element._id)
         const tarefaConcluida = new Tarefa(element.nome, element.dataConclusao, element.descricao, check.checked)
         const concluirTarefa = await fetch(`http://localhost:8080/api/mudar-status-tarefa/${element._id}`, {
             method: 'PATCH',
@@ -231,4 +227,58 @@ async function mudarStatusTarefa(check, element){
         console.log(error)
     }
     carregarDados()
+}
+
+export async function filtrarTarefas(filtro){
+    const tarefas = await fetch('http://localhost:8080/api/tarefas')
+    var todasTarefas = await tarefas.json()
+    var areaListaTarefas = document.getElementById('lista-tarefas')
+
+    if(filtro.value == 'Todas'){
+        carregarDados()
+    }else if(filtro.value == 'True'){
+        const tarefasConcluidas = todasTarefas.filter(e => e.concluida == true)
+        areaListaTarefas.innerHTML = ``
+        tarefasConcluidas.forEach(element => {
+            criarCardTarefa(element, areaListaTarefas)
+        })
+    }else if(filtro.value == 'False'){
+        const tarefasEmAndamento = todasTarefas.filter(e => e.concluida == false)
+        areaListaTarefas.innerHTML = ``
+        tarefasEmAndamento.forEach(element => {
+            var validarDataConclusao = element.dataConclusao.replace(regexDataConclusao, `$1$2$3`)
+            var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
+            if(Number(validarDataConclusao) >= Number(validarDataAgora)){
+                criarCardTarefa(element, areaListaTarefas)
+            }
+        })
+    }else if(filtro.value == 'Vencidas'){
+        const tarefasEmAndamento = todasTarefas.filter(e => e.concluida == false)
+        areaListaTarefas.innerHTML = ``
+        tarefasEmAndamento.forEach(element => {
+            var validarDataConclusao = element.dataConclusao.replace(regexDataConclusao, `$1$2$3`)
+            var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
+            if(Number(validarDataConclusao) < Number(validarDataAgora)){
+                criarCardTarefa(element, areaListaTarefas)
+            }
+        })
+    }
+}
+
+export async function pesquisarTarefa(valor){
+    const tarefas = await fetch('http://localhost:8080/api/tarefas')
+    var todasTarefas = await tarefas.json()
+    var areaListaTarefas = document.getElementById('lista-tarefas')
+
+    var tarefasFiltradas = todasTarefas.filter(e => e.nome.toLowerCase().includes(valor))
+    if(tarefasFiltradas.length == 0){
+        areaListaTarefas.innerHTML = ``
+        var msg = document.createElement('p')
+        msg.textContent = 'Nenhuma tarefa encontrada! Verifique a ortografia e tente novamente'
+        msg.style.color = '#8B5CF6'
+        areaListaTarefas.appendChild(msg)
+    }else{
+        areaListaTarefas.innerHTML = ''
+        tarefasFiltradas.forEach(e => criarCardTarefa(e, areaListaTarefas))
+    }
 }
