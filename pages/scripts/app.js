@@ -27,6 +27,9 @@ var btnExcluirTodas = document.getElementById('btn-excluir-todas')
 var filtroTarefa = document.getElementById('ifiltrar-tarefa')
 var pesquisaTarefa = document.getElementById('ipesquisar-tarefa')
 
+var modalMensagem = document.getElementById('modal-mensagem')
+var btnConfirma = document.getElementById('btn-confirma')
+
 //Função que abre o modal de cadastro de tarefa
 btnAddTarefa.addEventListener('click', () => {
     //Inicia o modal com os campos vazios
@@ -76,6 +79,8 @@ filtroTarefa.addEventListener('change', () => filtrarTarefas(filtroTarefa))
 
 //Chama a função de pesquisar a tarefa
 pesquisaTarefa.addEventListener('input', () => pesquisarTarefa(pesquisaTarefa.value))
+
+btnConfirma.addEventListener('click', () => modalMensagem.classList.remove('aberto'))
 
 //Carrega os dados e puxa todas as tarefas que já estiverem cadastradas
 carregarDados()

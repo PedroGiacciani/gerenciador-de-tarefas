@@ -14,6 +14,11 @@ var regexDataAgora = /^(0?[1-9]||[12][0-9]||3[01])\/(0?[1-9]||1[0-2])\/(\d{4})$/
 
 var idEditado = null
 
+var modalMensagem = document.getElementById('modal-mensagem')
+var msgErro = document.getElementById('mensagem')
+var btnConfirma = document.getElementById('btn-confirma')
+var btnCancela = document.getElementById('btn-cancela')
+
 //Função para adicionar uma nova tarefa
 export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, modal,){
     //Declaração de Variáveis
@@ -33,6 +38,7 @@ export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, moda
         modal.classList.remove('aberto') //fecha o modal de cadastro de tarefa
         const tarefa = new Tarefa(nomeTarefa.toLowerCase(), dataConclusao, descricao, false) //Cria um objeto tarefa (apenas para modelar o envio ao Db)
         try{
+            throw new Error('Não foi possível concluir a solicitação no servidor')
             const resposta = await fetch('http://localhost:8080/api/adicionar-tarefa', { //Requisição POST para adicionar a tarefa
                 method: 'POST', //Método
                 headers: {
@@ -40,11 +46,15 @@ export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, moda
                 },
                 body: JSON.stringify(tarefa) //Envia a tarefa como corpo da req
             })
+            if(!resposta.ok){
+                throw new Error('Não foi possível concluir a solicitação no servidor')
+            }
             carregarDados() //Carrega os dados
         }catch(error){
-            console.log(error) //Necessário atualização!
+            modalMensagem.classList.add('aberto')
+            msgErro.textContent = `Não foi possível adicionar a tarefa. [ERRO]: ${error.message}. Contate o suporte para mais informações`
+            btnCancela.style.display = 'none'
         }
-
     }
 }
 
@@ -62,8 +72,13 @@ export async function carregarDados(){
         }else{  
             tarefas.forEach(element => criarCardTarefa(element, areaListaTarefas))
         }
+        if(!response.ok){
+            throw new Error('Não foi possível concluir a solicitação no servidor')
+        }
     }catch(error){
-        console.log(error)
+        modalMensagem.classList.add('aberto')
+        msgErro.textContent = `Não foi possível carregar suas tarefas. [ERRO]: ${error.message}. Contate o suporte para mais informações`
+        btnCancela.style.display = 'none'
     }
 }
 
@@ -165,17 +180,30 @@ export async function excluirTodasTarefas(){
                 carregarDados()
             }
         }
+        if(!response.ok){
+            throw new Error('Não foi possível concluir a solicitação no servidor')
+        }
     }catch(error){
-        console.log(error)
+        modalMensagem.classList.add('aberto')
+        msgErro.textContent = `Não foi possível excluir suas tarefas. [ERRO]: ${error.message}. Contate o suporte para mais informações`
+        btnCancela.style.display = 'none'
     }
-    
 }
 
-function excluirTarefa(element){
+async function excluirTarefa(element){
     if(confirm("A tarefa será excluída! Deseja mesmo continuar?")){
-        fetch(`http://localhost:8080/api/deletar-tarefa/${element._id}`, {
-            method: 'DELETE'
-        })
+        try {
+            const resposta = await fetch(`http://localhost:8080/api/deletar-tarefa/${element._id}`, {
+                method: 'DELETE'
+            })
+            if(!resposta.ok){
+                throw new Error('Não foi possível concluir a solicitação no servidor')
+            }
+        } catch ({error}) {
+            modalMensagem.classList.add('aberto')
+            msgErro.textContent = `Não foi possível excluir a tarefa. [ERRO]: ${error.message}. Contate o suporte para mais informações`
+            btnCancela.style.display = 'none'
+        }
     }
     carregarDados()
 }
@@ -208,12 +236,14 @@ export async function editarTarefa(nomeTarefa, dataConclusao, descricao, modal){
             body: JSON.stringify(tarefaEditada)
         })
         if(!promise.ok){
-            throw new Error('Não foi possível editar a tarefa')
+            throw new Error('Não foi possível concluir a solicitação no servidor')
         }
         modal.classList.remove('aberto')
         carregarDados()
     }catch(error){
-        console.log(error)
+        modalMensagem.classList.add('aberto')
+        msgErro.textContent = `Não foi possível atualizar a tarefa. [ERRO]: ${error.message}. Contate o suporte para mais informações`
+        btnCancela.style.display = 'none'
     }
 }
 
@@ -227,62 +257,85 @@ async function mudarStatusTarefa(check, element){
             }, 
             body: JSON.stringify(tarefaConcluida)
         })
+        if(!concluirTarefa.ok){
+            throw new Error('Não foi possível concluir a solicitação no servidor')
+        }
     }catch(error){
-        console.log(error)
+        modalMensagem.classList.add('aberto')
+        msgErro.textContent = `Não foi possível concluir a tarefa. [ERRO]: ${error.message}. Contate o suporte para mais informações`
+        btnCancela.style.display = 'none'
     }
     carregarDados()
 }
 
 export async function filtrarTarefas(filtro){
-    const tarefas = await fetch('http://localhost:8080/api/tarefas')
-    var todasTarefas = await tarefas.json()
-    var areaListaTarefas = document.getElementById('lista-tarefas')
+    try{
+        const tarefas = await fetch('http://localhost:8080/api/tarefas')
+        var todasTarefas = await tarefas.json()
+        var areaListaTarefas = document.getElementById('lista-tarefas')
 
-    if(filtro.value == 'Todas'){
-        carregarDados()
-    }else if(filtro.value == 'True'){
-        const tarefasConcluidas = todasTarefas.filter(e => e.concluida == true)
-        areaListaTarefas.innerHTML = ``
-        tarefasConcluidas.forEach(element => {
-            criarCardTarefa(element, areaListaTarefas)
-        })
-    }else if(filtro.value == 'False'){
-        const tarefasEmAndamento = todasTarefas.filter(e => e.concluida == false)
-        areaListaTarefas.innerHTML = ``
-        tarefasEmAndamento.forEach(element => {
-            var validarDataConclusao = element.dataConclusao.replace(regexDataConclusao, `$1$2$3`)
-            var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
-            if(Number(validarDataConclusao) >= Number(validarDataAgora)){
+        if(filtro.value == 'Todas'){
+            carregarDados()
+        }else if(filtro.value == 'True'){
+            const tarefasConcluidas = todasTarefas.filter(e => e.concluida == true)
+            areaListaTarefas.innerHTML = ``
+            tarefasConcluidas.forEach(element => {
                 criarCardTarefa(element, areaListaTarefas)
-            }
-        })
-    }else if(filtro.value == 'Vencidas'){
-        const tarefasEmAndamento = todasTarefas.filter(e => e.concluida == false)
-        areaListaTarefas.innerHTML = ``
-        tarefasEmAndamento.forEach(element => {
-            var validarDataConclusao = element.dataConclusao.replace(regexDataConclusao, `$1$2$3`)
-            var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
-            if(Number(validarDataConclusao) < Number(validarDataAgora)){
-                criarCardTarefa(element, areaListaTarefas)
-            }
-        })
+            })
+        }else if(filtro.value == 'False'){
+            const tarefasEmAndamento = todasTarefas.filter(e => e.concluida == false)
+            areaListaTarefas.innerHTML = ``
+            tarefasEmAndamento.forEach(element => {
+                var validarDataConclusao = element.dataConclusao.replace(regexDataConclusao, `$1$2$3`)
+                var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
+                if(Number(validarDataConclusao) >= Number(validarDataAgora)){
+                    criarCardTarefa(element, areaListaTarefas)
+                }
+            })
+        }else if(filtro.value == 'Vencidas'){
+            const tarefasEmAndamento = todasTarefas.filter(e => e.concluida == false)
+            areaListaTarefas.innerHTML = ``
+            tarefasEmAndamento.forEach(element => {
+                var validarDataConclusao = element.dataConclusao.replace(regexDataConclusao, `$1$2$3`)
+                var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
+                if(Number(validarDataConclusao) < Number(validarDataAgora)){
+                    criarCardTarefa(element, areaListaTarefas)
+                }
+            })
+        }
+        if(!tarefas.response){
+            throw new Error('Não foi possível concluir a solicitação no servidor')
+        }
+    }catch(error){
+        modalMensagem.classList.add('aberto')
+        msgErro.textContent = `Não foi possível filtrar suas tarefas. [ERRO]: ${error.message}. Contate o suporte para mais informações`
+        btnCancela.style.display = 'none'
     }
 }
 
 export async function pesquisarTarefa(valor){
-    const tarefas = await fetch('http://localhost:8080/api/tarefas')
-    var todasTarefas = await tarefas.json()
-    var areaListaTarefas = document.getElementById('lista-tarefas')
+    try{
+        const tarefas = await fetch('http://localhost:8080/api/tarefas')
+        var todasTarefas = await tarefas.json()
+        var areaListaTarefas = document.getElementById('lista-tarefas')
 
-    var tarefasFiltradas = todasTarefas.filter(e => e.nome.toLowerCase().includes(valor))
-    if(tarefasFiltradas.length == 0){
-        areaListaTarefas.innerHTML = ``
-        var msg = document.createElement('p')
-        msg.textContent = 'Nenhuma tarefa encontrada! Verifique a ortografia e tente novamente'
-        msg.style.color = '#8B5CF6'
-        areaListaTarefas.appendChild(msg)
-    }else{
-        areaListaTarefas.innerHTML = ''
-        tarefasFiltradas.forEach(e => criarCardTarefa(e, areaListaTarefas))
+        var tarefasFiltradas = todasTarefas.filter(e => e.nome.toLowerCase().includes(valor))
+        if(tarefasFiltradas.length == 0){
+            areaListaTarefas.innerHTML = ``
+            var msg = document.createElement('p')
+            msg.textContent = 'Nenhuma tarefa encontrada! Verifique a ortografia e tente novamente'
+            msg.style.color = '#8B5CF6'
+            areaListaTarefas.appendChild(msg)
+        }else{
+            areaListaTarefas.innerHTML = ''
+            tarefasFiltradas.forEach(e => criarCardTarefa(e, areaListaTarefas))
+        }
+        if(!tarefas.ok){
+            throw new Error('Não foi possível concluir a solicitação')
+        }
+    }catch(error){
+        modalMensagem.classList.add('aberto')
+        msgErro.textContent = `Não foi possível pesquisar por suas tarefas. [ERRO]: ${error.message}. Contate o suporte para mais informações`
+        btnCancela.style.display = 'none'
     }
 }
