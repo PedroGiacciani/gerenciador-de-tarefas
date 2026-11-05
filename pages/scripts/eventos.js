@@ -269,36 +269,52 @@ async function mudarStatusTarefa(check, element){
 
 export async function filtrarTarefas(filtro){
     try{
+        var areaListaTarefas = document.getElementById('lista-tarefas')
+        areaListaTarefas.innerHTML = ``
         const tarefas = await fetch('http://localhost:8080/tarefas')
         var todasTarefas = await tarefas.json()
-        var areaListaTarefas = document.getElementById('lista-tarefas')
+        var msg = document.createElement('p')
+        areaListaTarefas.appendChild(msg)
 
         if(filtro.value == 'Todas'){
             carregarDados()
         }else if(filtro.value == 'True'){
             const tarefasConcluidas = todasTarefas.filter(e => e.concluida == true)
-            areaListaTarefas.innerHTML = ``
-            tarefasConcluidas.forEach(element => {
-                criarCardTarefa(element, areaListaTarefas)
-            })
+            if(tarefasConcluidas.length != 0){
+                tarefasConcluidas.forEach(element => {
+                    criarCardTarefa(element, areaListaTarefas)
+                })
+            }else{
+                msg.textContent = 'Nenhuma tarefa com esse filtro encontrada!'
+                msg.style.color = '#8B5CF6'
+            }
         }else if(filtro.value == 'False'){
             const tarefasEmAndamento = todasTarefas.filter(e => e.concluida == false)
-            areaListaTarefas.innerHTML = ``
-            tarefasEmAndamento.forEach(element => {
-                var validarDataConclusao = element.dataConclusao.replace(regexDataConclusao, `$1$2$3`)
-                var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
-                if(Number(validarDataConclusao) >= Number(validarDataAgora)){
-                    criarCardTarefa(element, areaListaTarefas)
-                }
-            })
+            if(tarefasEmAndamento.length != 0){
+                tarefasEmAndamento.forEach(element => {
+                    var validarDataConclusao = element.dataConclusao.replace(regexDataConclusao, `$1$2$3`)
+                    var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
+                    if(Number(validarDataConclusao) >= Number(validarDataAgora)){
+                        criarCardTarefa(element, areaListaTarefas)
+                    }
+                })
+            }else{
+                msg.textContent = 'Nenhuma tarefa com esse filtro encontrada!'
+                msg.style.color = '#8B5CF6'
+            }
         }else if(filtro.value == 'Vencidas'){
             const tarefasEmAndamento = todasTarefas.filter(e => e.concluida == false)
-            areaListaTarefas.innerHTML = ``
+            var identificador = 0
             tarefasEmAndamento.forEach(element => {
                 var validarDataConclusao = element.dataConclusao.replace(regexDataConclusao, `$1$2$3`)
                 var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
                 if(Number(validarDataConclusao) < Number(validarDataAgora)){
                     criarCardTarefa(element, areaListaTarefas)
+                    identificador = 1
+                }
+                if(identificador == 0){
+                    msg.textContent = 'Nenhuma tarefa com esse filtro encontrada!'
+                    msg.style.color = '#8B5CF6'
                 }
             })
         }
