@@ -1,8 +1,6 @@
 const fs = require('fs')
 const express = require('express')
 const taskModel = require('../src/models/taskModel')
-const { error } = require('console')
-const { castObject } = require('moongose/models/user_model')
 
 const app = express()
 app.use(express.static("./pages")) //Procura as páginas 

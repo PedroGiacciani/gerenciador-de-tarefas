@@ -9,8 +9,8 @@ var msgNome = document.getElementById('msg-nome-tarefa')
 var msgData = document.getElementById('msg-data-tarefa')
 var msgDesc = document.getElementById('msg-descricao-tarefa')
 
-var regexDataConclusao = /^(\d{4})-(0?[1-9]||1[0-2])-(0?[1-9]||[12][0-9]||3[01])$/
-var regexDataAgora = /^(0?[1-9]||[12][0-9]||3[01])\/(0?[1-9]||1[0-2])\/(\d{4})$/
+var regexDataConclusao = /^(\d{4})-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])$/
+var regexDataAgora = /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[0-2])\/(\d{4})$/
 
 var idEditado = null
 
@@ -38,7 +38,6 @@ export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, moda
         modal.classList.remove('aberto') //fecha o modal de cadastro de tarefa
         const tarefa = new Tarefa(nomeTarefa.toLowerCase(), dataConclusao, descricao, false) //Cria um objeto tarefa (apenas para modelar o envio ao Db)
         try{
-            throw new Error('Não foi possível concluir a solicitação no servidor')
             const resposta = await fetch('http://localhost:8080/api/adicionar-tarefa', { //Requisição POST para adicionar a tarefa
                 method: 'POST', //Método
                 headers: {
@@ -199,7 +198,7 @@ async function excluirTarefa(element){
             if(!resposta.ok){
                 throw new Error('Não foi possível concluir a solicitação no servidor')
             }
-        } catch ({error}) {
+        } catch (error) {
             modalMensagem.classList.add('aberto')
             msgErro.textContent = `Não foi possível excluir a tarefa. [ERRO]: ${error.message}. Contate o suporte para mais informações`
             btnCancela.style.display = 'none'
@@ -303,7 +302,7 @@ export async function filtrarTarefas(filtro){
                 }
             })
         }
-        if(!tarefas.response){
+        if(!tarefas.ok){
             throw new Error('Não foi possível concluir a solicitação no servidor')
         }
     }catch(error){
