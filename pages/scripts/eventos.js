@@ -38,7 +38,7 @@ export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, moda
         modal.classList.remove('aberto') //fecha o modal de cadastro de tarefa
         const tarefa = new Tarefa(nomeTarefa.toLowerCase(), dataConclusao, descricao, false) //Cria um objeto tarefa (apenas para modelar o envio ao Db)
         try{
-            const resposta = await fetch('http://localhost:8080/api/adicionar-tarefa', { //Requisição POST para adicionar a tarefa
+            const resposta = await fetch('http://localhost:8080/tarefas/adicionar-tarefa', { //Requisição POST para adicionar a tarefa
                 method: 'POST', //Método
                 headers: {
                     'Content-Type': 'application/json' //Cabeçalho, indica o tipo de conteúdo que vai ser enviado via req
@@ -61,7 +61,7 @@ export async function carregarDados(){
     var areaListaTarefas = document.getElementById('lista-tarefas')
     areaListaTarefas.innerHTML = ``
     try{
-        const response = await fetch('http://localhost:8080/api/tarefas')
+        const response = await fetch('http://localhost:8080/tarefas')
         var tarefas = await response.json()
         if(tarefas.length == 0){
             var msg = document.createElement('p')
@@ -164,14 +164,14 @@ function criarCardTarefa(element, areaListaTarefas){
 
 export async function excluirTodasTarefas(){
     try{
-        const response = await fetch('http://localhost:8080/api/tarefas')
+        const response = await fetch('http://localhost:8080/tarefas')
         var tarefas = await response.json()
         if(tarefas.length == 0){
             alert('Nenhuma tarefa cadastrada para excluir!')
         }else{
             if(confirm("Atenção! Todas as tarefas serão excluidas! Deseja mesmo continuar?")){
                 const promises = tarefas.map(element => {
-                    return fetch(`http://localhost:8080/api/deletar-tarefa/${element._id}`, {
+                    return fetch(`http://localhost:8080/tarefas/deletar-tarefa/${element._id}`, {
                         method: 'DELETE',
                     })
                 })
@@ -192,7 +192,7 @@ export async function excluirTodasTarefas(){
 async function excluirTarefa(element){
     if(confirm("A tarefa será excluída! Deseja mesmo continuar?")){
         try {
-            const resposta = await fetch(`http://localhost:8080/api/deletar-tarefa/${element._id}`, {
+            const resposta = await fetch(`http://localhost:8080/tarefas/deletar-tarefa/${element._id}`, {
                 method: 'DELETE'
             })
             if(!resposta.ok){
@@ -227,7 +227,7 @@ function abrirEditorTarefa(element){
 export async function editarTarefa(nomeTarefa, dataConclusao, descricao, modal){
     var tarefaEditada = new Tarefa(nomeTarefa, dataConclusao, descricao)
     try{
-        const promise = await fetch(`http://localhost:8080/api/editar-tarefa/${idEditado}`, {
+        const promise = await fetch(`http://localhost:8080/tarefas/editar-tarefa/${idEditado}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'  
@@ -249,7 +249,7 @@ export async function editarTarefa(nomeTarefa, dataConclusao, descricao, modal){
 async function mudarStatusTarefa(check, element){
     try{
         const tarefaConcluida = new Tarefa(element.nome, element.dataConclusao, element.descricao, check.checked)
-        const concluirTarefa = await fetch(`http://localhost:8080/api/mudar-status-tarefa/${element._id}`, {
+        const concluirTarefa = await fetch(`http://localhost:8080/tarefas/mudar-status-tarefa/${element._id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
@@ -269,7 +269,7 @@ async function mudarStatusTarefa(check, element){
 
 export async function filtrarTarefas(filtro){
     try{
-        const tarefas = await fetch('http://localhost:8080/api/tarefas')
+        const tarefas = await fetch('http://localhost:8080/tarefas')
         var todasTarefas = await tarefas.json()
         var areaListaTarefas = document.getElementById('lista-tarefas')
 
@@ -314,7 +314,7 @@ export async function filtrarTarefas(filtro){
 
 export async function pesquisarTarefa(valor){
     try{
-        const tarefas = await fetch('http://localhost:8080/api/tarefas')
+        const tarefas = await fetch('http://localhost:8080/tarefas')
         var todasTarefas = await tarefas.json()
         var areaListaTarefas = document.getElementById('lista-tarefas')
 
