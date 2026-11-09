@@ -20,10 +20,8 @@ var btnConfirma = document.getElementById('btn-confirma')
 var btnCancela = document.getElementById('btn-cancela')
 
 //Função para adicionar uma nova tarefa
-export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, modal,){
+export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, modal){
     //Declaração de Variáveis
-    var validarDataConclusao = dataConclusao.replace(regexDataConclusao, `$1$2$3`)
-    var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
     if(nomeTarefa.length == 0){ //Verifica se o nome foi devidamente escrito e dispara uma mensagem
         msgNome.textContent = 'Campo obrigatório *'
     }else if(nomeTarefa.length > 40){ //Verifica se o nome foi devidamente escrito e dispara uma mensagem
@@ -225,24 +223,41 @@ function abrirEditorTarefa(element){
 }
 
 export async function editarTarefa(nomeTarefa, dataConclusao, descricao, modal){
-    var tarefaEditada = new Tarefa(nomeTarefa, dataConclusao, descricao)
-    try{
-        const promise = await fetch(`http://localhost:8080/tarefas/editar-tarefa/${idEditado}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify(tarefaEditada)
-        })
-        if(!promise.ok){
-            throw new Error('Não foi possível concluir a solicitação no servidor')
+    msgNome.textContent = ''
+    msgData.textContent = ''
+    msgDesc.textContent = ''
+    var validarDataConclusao = dataConclusao.replace(regexDataConclusao, `$1$2$3`)
+    var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
+    if(nomeTarefa.length == 0){ //Verifica se o nome foi devidamente escrito e dispara uma mensagem
+        msgNome.textContent = 'Campo obrigatório *'
+    }else if(nomeTarefa.length > 40){ //Verifica se o nome foi devidamente escrito e dispara uma mensagem
+        msgNome.textContent = 'O nome não pode ultrapassar 40 caracteres *'
+    }else if(dataConclusao.length == 0){ //Verifica se a data é válida e dispara uma mensagem
+        msgData.textContent = 'Campo obrigatório *' 
+    }else if(Number(validarDataAgora) > Number(validarDataConclusao)){ //Verifica se a data é válida e dispara uma mensagem
+        msgData.textContent = 'Digite uma data válida *'
+    }else if(descricao.length == 0){ //Verifica se a descrição foi devidamente escrita e dispara uma mensagem
+        msgDesc.textContent = 'Campo obrigatório *'
+    }else{
+        var tarefaEditada = new Tarefa(nomeTarefa, dataConclusao, descricao)
+        try{
+            const promise = await fetch(`http://localhost:8080/tarefas/editar-tarefa/${idEditado}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'  
+                },
+                body: JSON.stringify(tarefaEditada)
+            })
+            if(!promise.ok){
+                throw new Error('Não foi possível concluir a solicitação no servidor')
+            }
+            modal.classList.remove('aberto')
+            carregarDados()
+        }catch(error){
+            modalMensagem.classList.add('aberto')
+            msgErro.textContent = `Não foi possível atualizar a tarefa. [ERRO]: ${error.message}. Contate o suporte para mais informações`
+            btnCancela.style.display = 'none'
         }
-        modal.classList.remove('aberto')
-        carregarDados()
-    }catch(error){
-        modalMensagem.classList.add('aberto')
-        msgErro.textContent = `Não foi possível atualizar a tarefa. [ERRO]: ${error.message}. Contate o suporte para mais informações`
-        btnCancela.style.display = 'none'
     }
 }
 

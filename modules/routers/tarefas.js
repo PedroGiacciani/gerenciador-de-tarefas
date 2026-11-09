@@ -24,7 +24,10 @@ router.delete('/deletar-tarefa/:id', async (req, res) => { //Requisição que de
     try{
         let id = req.params.id
         const tarefaDeletada = await taskModel.findByIdAndDelete(id)
-        res.status(200).json(tarefaDeletada)
+        if(tarefaDeletada == null){
+           return res.status(404).send("Tarefa não encontrada")
+        }
+        return res.status(200).json(tarefaDeletada)
     }catch(error){
         res.status(500).send(error.message)
     }
@@ -34,7 +37,10 @@ router.patch('/editar-tarefa/:id', async (req, res) => { //Requisição que edit
     try{
         let id = req.params.id
         const tarefaEditada = await taskModel.findByIdAndUpdate(id, req.body, {returnDocument: 'after'})
-        res.status(200).json(tarefaEditada)
+        if(tarefaEditada == null){
+           return res.status(404).send("Tarefa não encontrada")
+        }
+        return res.status(200).json(tarefaEditada)
     }catch(error){
         res.status(500).send(error.message)
     }
@@ -44,7 +50,10 @@ router.patch('/mudar-status-tarefa/:id', async (req, res) => { //Requisição pa
     try{
         let id = req.params.id
         let mudarStatus = await taskModel.findByIdAndUpdate(id, req.body, {returnDocument: 'after'})
-        res.status(200).json(mudarStatus)
+        if(mudarStatus == null){
+           return res.status(404).send("Tarefa não encontrada")
+        }
+        return res.status(200).json(mudarStatus)
     }catch(error){
         res.status(500).send(error.message)
     }

@@ -65,7 +65,6 @@ btnSaveTarefa.addEventListener('click', () => {
     msgData.textContent = ``
     msgDesc.textContent = ``
     adicionarTarefa(nomeTarefa.value, dataConclusao.value, descricao.value, modalContainer)
-    
 })
 
 //Chama a função de excluir todas as tarefas
