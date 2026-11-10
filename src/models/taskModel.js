@@ -8,14 +8,17 @@ const taskSchema = new mongoose.Schema({ //Cria um modelo de tarefa para subir a
     dataConclusao: {
         type: String,
         required: true,
+        trim: true, 
     },
     descricao: {
         type: String,
         required: true,
+        trim: true,
     },
     nome: {
         type: String,
         required: true,
+        trim: true,
     },
 })
 

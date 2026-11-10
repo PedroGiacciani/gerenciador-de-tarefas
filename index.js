@@ -6,4 +6,4 @@ const connectToDatabase = require('./src/database/connect') //Importar a funçã
 dotenv.config() //Configura as variáveis de ambiente
 connectToDatabase() //Conecta com o banco
 
-require('./modules/express')
+require('./src/config/express')

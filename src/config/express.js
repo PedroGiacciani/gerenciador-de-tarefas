@@ -1,6 +1,7 @@
 const fs = require('fs')
 const express = require('express')
-const taskRouter = require('./routers/tarefas')
+const taskRouter = require('../routers/tarefas.js')
+const errMid = require('../middlewares/errorHandling.js')
 
 const app = express()
 app.use(express.static("./pages")) //Procura as páginas 
@@ -16,6 +17,7 @@ app.get('/', (req, res) => { //Requisição que carrega a página principal do s
 })
 
 app.use("/tarefas", taskRouter)
+app.use(errMid)
 
 const port = 8080
 app.listen(port, () => console.log(`Running in port ${port}`))

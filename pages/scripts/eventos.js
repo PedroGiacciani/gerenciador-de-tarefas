@@ -22,15 +22,17 @@ var btnCancela = document.getElementById('btn-cancela')
 //Função para adicionar uma nova tarefa
 export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, modal){
     //Declaração de Variáveis
-    if(nomeTarefa.length == 0){ //Verifica se o nome foi devidamente escrito e dispara uma mensagem
+    var validarDataConclusao = dataConclusao.replace(regexDataConclusao, `$1$2$3`)
+    var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
+    if(nomeTarefa.trim() === ''){ //Verifica se o nome foi devidamente escrito e dispara uma mensagem
         msgNome.textContent = 'Campo obrigatório *'
     }else if(nomeTarefa.length > 40){ //Verifica se o nome foi devidamente escrito e dispara uma mensagem
         msgNome.textContent = 'O nome não pode ultrapassar 40 caracteres *'
-    }else if(dataConclusao.length == 0){ //Verifica se a data é válida e dispara uma mensagem
+    }else if(dataConclusao.trim() === ''){ //Verifica se a data é válida e dispara uma mensagem
         msgData.textContent = 'Campo obrigatório *' 
     }else if(Number(validarDataAgora) > Number(validarDataConclusao)){ //Verifica se a data é válida e dispara uma mensagem
         msgData.textContent = 'Digite uma data válida *'
-    }else if(descricao.length == 0){ //Verifica se a descrição foi devidamente escrita e dispara uma mensagem
+    }else if(descricao.trim() === ''){ //Verifica se a descrição foi devidamente escrita e dispara uma mensagem
         msgDesc.textContent = 'Campo obrigatório *'
     }else{
         modal.classList.remove('aberto') //fecha o modal de cadastro de tarefa
@@ -228,15 +230,15 @@ export async function editarTarefa(nomeTarefa, dataConclusao, descricao, modal){
     msgDesc.textContent = ''
     var validarDataConclusao = dataConclusao.replace(regexDataConclusao, `$1$2$3`)
     var validarDataAgora = agora.replace(regexDataAgora, `$3$2$1`)
-    if(nomeTarefa.length == 0){ //Verifica se o nome foi devidamente escrito e dispara uma mensagem
+    if(nomeTarefa.trim() === ''){ //Verifica se o nome foi devidamente escrito e dispara uma mensagem
         msgNome.textContent = 'Campo obrigatório *'
     }else if(nomeTarefa.length > 40){ //Verifica se o nome foi devidamente escrito e dispara uma mensagem
         msgNome.textContent = 'O nome não pode ultrapassar 40 caracteres *'
-    }else if(dataConclusao.length == 0){ //Verifica se a data é válida e dispara uma mensagem
+    }else if(dataConclusao.trim() === ''){ //Verifica se a data é válida e dispara uma mensagem
         msgData.textContent = 'Campo obrigatório *' 
     }else if(Number(validarDataAgora) > Number(validarDataConclusao)){ //Verifica se a data é válida e dispara uma mensagem
         msgData.textContent = 'Digite uma data válida *'
-    }else if(descricao.length == 0){ //Verifica se a descrição foi devidamente escrita e dispara uma mensagem
+    }else if(descricao.trim() === ''){ //Verifica se a descrição foi devidamente escrita e dispara uma mensagem
         msgDesc.textContent = 'Campo obrigatório *'
     }else{
         var tarefaEditada = new Tarefa(nomeTarefa, dataConclusao, descricao)
