@@ -7,6 +7,9 @@ var agora = `${data.toLocaleDateString('pt-br')}`
 var regexDataConclusao = /^(\d{4})-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])$/
 var regexDataAgora = /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[0-2])\/(\d{4})$/
 
+var regexFev = /^(\d{4})-(0?2)-(3[01])$/
+var regexMesCom30 = /^(\d{4})-(0?[469]|11)-(31)$/
+
 const mostrarTarefas = async(req, res) => {
     const tarefas = await taskModel.find({})
     return res.status(200).json(tarefas)
@@ -31,7 +34,7 @@ const adicionarTarefa = async(req, res) => {
         const error = new Error("Data de conclusão no padrão inválido. Utilize o padrão AAAA-MM-DD para requisições!")
         error.statusCode = 400
         throw error
-    }else if(Number(validarDataConclusao) < Number(validarDataAgora)){
+    }else if(Number(validarDataConclusao) < Number(validarDataAgora) || regexFev.test(dataConclusao) || regexMesCom30.test(dataConclusao)){
         const error = new Error("Data de conclusão inválida")
         error.statusCode = 400
         throw error
@@ -42,12 +45,7 @@ const adicionarTarefa = async(req, res) => {
     }
     
     const tarefa = await taskModel.create(req.body)
-    
-    if(!tarefa){
-        const error = new Error("Não foi possível adicionar a tarefa! Contate o suporte para mais informações")
-        error.statusCode = 500
-        throw error
-    }
+
     return res.status(201).json(tarefa)
 }
 

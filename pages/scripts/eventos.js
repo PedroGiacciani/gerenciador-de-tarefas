@@ -29,7 +29,7 @@ export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, moda
     }else if(nomeTarefa.length > 40){ //Verifica se o nome foi devidamente escrito e dispara uma mensagem
         msgNome.textContent = 'O nome não pode ultrapassar 40 caracteres *'
     }else if(dataConclusao.trim() === ''){ //Verifica se a data é válida e dispara uma mensagem
-        msgData.textContent = 'Campo obrigatório *' 
+        msgData.textContent = 'Digite uma data válida *' 
     }else if(Number(validarDataAgora) > Number(validarDataConclusao)){ //Verifica se a data é válida e dispara uma mensagem
         msgData.textContent = 'Digite uma data válida *'
     }else if(descricao.trim() === ''){ //Verifica se a descrição foi devidamente escrita e dispara uma mensagem
