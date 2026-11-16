@@ -78,17 +78,15 @@ const mudarStatusTarefa = async(req, res) => {
     if(!mongoose.isObjectIdOrHexString(id)){
         taskErrors(1)
     }
-    let mudarStatus = await taskModel.findByIdAndUpdate(id, req.body, {returnDocument: 'after'})
-    const statusTarefa = req.body
-    if(mudarStatus == null){
-        taskErrors(2)
-    }
-    console.log(mudarStatus)
-    console.log(statusTarefa)
-    if(mudarStatus.concluida == statusTarefa.concluida){
+    const statusTarefa = await taskModel.findById(id)
+    if(req.body.concluida == statusTarefa.concluida){
         const error = new Error('O status da tarefa é o mesmo da requisição. Nada mudou')
         error.statusCode = 400
         throw error
+    }
+    let mudarStatus = await taskModel.findByIdAndUpdate(id, req.body, {returnDocument: 'after'})
+    if(mudarStatus == null){
+        taskErrors(2)
     }
     return res.status(200).json(mudarStatus)
 }

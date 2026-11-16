@@ -7,6 +7,14 @@ const taskModel = require('../src/models/taskModel')
 
 jest.mock('../src/models/taskModel')
 
+describe("Show Tasks controller", () => {
+    it("Should fail if something goes wrong with the server", async() => {
+        taskModel.find.mockRejectedValue(new Error("Erro interno no servidor"))
+        await expect(taskController.mostrarTarefas()).rejects.toThrow("Erro interno no servidor")
+        expect(taskModel.find).toHaveBeenCalledTimes(1)
+    })
+})
+
 describe("Add Tasks controller", () => {
     beforeEach(() => {
         jest.clearAllMocks()
@@ -196,5 +204,330 @@ describe("Add Tasks controller", () => {
 
         await expect(taskController.adicionarTarefa(req, {})).rejects.toThrow("Erro interno no servidor")
         expect(taskModel.create).toHaveBeenCalledTimes(1)
+    })
+})
+
+describe("Delete Tasks controller", () => {
+    beforeEach(() => {
+        jest.clearAllMocks()
+    })
+    
+    it("Should delete a task", async() => {
+        const req = {
+            params: {
+                id: "507f1f77bcf86cd799439011"
+            },
+            body: {
+                nome: "Realizar teste",
+                dataConclusao: "2999-12-12",
+                descricao: "Realizar teste unitário para ver se a tarefa está sendo criada",
+                concluida: false
+            }
+        }
+
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
+        }
+
+        taskModel.findByIdAndDelete.mockResolvedValue(req)
+        await taskController.deletarTarefa(req, res)
+
+        expect(res.json).toHaveBeenCalledTimes(1)
+        expect(res.status).toHaveBeenCalledWith(200)
+        expect(taskModel.findByIdAndDelete).toHaveBeenCalledTimes(1)
+        expect(taskModel.findByIdAndDelete).toHaveBeenCalledWith(req.params.id)
+    })
+
+    it("Should fail if task id is not valid", async() => {
+        const req = {
+            params: {
+                id: "123abc"
+            },
+            body: {
+                nome: "Realizar teste",
+                dataConclusao: "2999-12-12",
+                descricao: "Realizar teste unitário para ver se a tarefa está sendo deletada",
+                concluida: false
+            }
+        }
+
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
+        }
+
+        await expect(taskController.deletarTarefa(req, res)).rejects.toMatchObject({
+            statusCode: 400,
+            message: "ID em formato inválido"
+        })
+        expect(taskModel.findByIdAndDelete).not.toHaveBeenCalled()
+    })
+
+    it("Should fail if the task was not found", async() => {
+        const req = {
+            params: {
+                id: "507f1f77bcf86cd799439011"
+            },
+            body: {
+                nome: "Realizar teste",
+                dataConclusao: "2999-12-12",
+                descricao: "Realizar teste unitário para ver se a tarefa está sendo criada",
+                concluida: false
+            }
+        }
+
+        taskModel.findByIdAndDelete.mockResolvedValue(null)
+
+        await expect(taskController.deletarTarefa(req, {})).rejects.toMatchObject({
+            statusCode: 404,
+            message: "Tarefa não encontrada, verifique se o ID fornecido realmente existe!"
+        })
+        expect(taskModel.findByIdAndDelete).toHaveBeenCalledTimes(1)
+    })
+
+    it("Should fail if something goes wrong with the server", async() => {
+        const req = {
+            params: {
+                id: "507f1f77bcf86cd799439011"
+            },
+            body: {
+                nome: "Teste",
+                dataConclusao: "2999-11-09",
+                descricao: "Testando deleção de tarefas"
+            }
+        }
+
+        taskModel.findByIdAndDelete.mockRejectedValue(new Error("Erro interno no servidor"))
+
+        await expect(taskController.deletarTarefa(req, {})).rejects.toThrow("Erro interno no servidor")
+        expect(taskModel.findByIdAndUpdate).not.toHaveBeenCalled()
+    })
+})
+
+describe("Edit Tasks controller", () => {
+    beforeEach(() => {
+        jest.clearAllMocks()
+    })
+
+    it("Should update the task", async() => {
+        const req = {
+            params: {
+                id: "507f1f77bcf86cd799439011"
+            },
+            body: {
+                nome: "Teste",
+                dataConclusao: "2999-11-09",
+                descricao: "teste"
+            }
+        }
+
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
+        }
+
+        taskModel.findByIdAndUpdate.mockResolvedValue(req)
+        await taskController.editarTarefa(req, res)
+
+        expect(taskModel.findByIdAndUpdate).toHaveBeenCalledTimes(1)
+        expect(res.status).toHaveBeenCalledWith(200)
+        expect(res.json).toHaveBeenCalledTimes(1)
+    
+    })
+
+    it("Should fail if the ID is in a invalid format", async() => {
+        const req = {
+            params: {
+                id: "123abc"
+            },
+            body: {
+                nome: "Teste",
+                dataConclusao: "2999-11-09",
+                descricao: "Teste"
+            }
+        }
+
+        await expect(taskController.editarTarefa(req, {})).rejects.toMatchObject({
+            statusCode: 400,
+            message: "ID em formato inválido"
+        })
+        expect(taskModel.findByIdAndUpdate).not.toHaveBeenCalled()
+    })
+
+    it("Should fail if the task was not found", async() => {
+        const req = {
+            params: {
+                id: "507f1f77bcf86cd799439011"
+            },
+            body: {
+                nome: "Realizar teste",
+                dataConclusao: "2999-12-12",
+                descricao: "Realizar teste unitário para ver se a tarefa está sendo criada",
+                concluida: false
+            }
+        }
+
+        taskModel.findByIdAndUpdate.mockResolvedValue(null)
+        await expect(taskController.editarTarefa(req, {})).rejects.toMatchObject({
+            statusCode: 404,
+            message: "Tarefa não encontrada, verifique se o ID fornecido realmente existe!"
+        })
+        expect(taskModel.findByIdAndUpdate).toHaveBeenCalledTimes(1)
+    })
+
+    it("Should fail if something goes wrong with the server", async() => {
+        const req = {
+            params: {
+                id: "507f1f77bcf86cd799439011"
+            },
+            body: {
+                nome: "Realizar teste",
+                dataConclusao: "2999-12-12",
+                descricao: "Realizar teste unitário para ver se a tarefa está sendo criada",
+                concluida: false
+            }
+        }
+
+        taskModel.findByIdAndUpdate.mockRejectedValue(new Error("Erro interno no servidor"))
+        await expect(taskController.editarTarefa(req, {})).rejects.toThrow("Erro interno no servidor")
+        expect(taskModel.findByIdAndUpdate).toHaveBeenCalledTimes(1)
+    })
+})
+
+describe("Change Tasks status controller", () => {
+    beforeEach(() => {
+        jest.clearAllMocks()
+    })
+
+    it("Should change the task status", async() => {
+        taskModel.findById.mockResolvedValue({
+            concluida: false
+        })
+        
+        const req = {
+            params: {
+                id: "507f1f77bcf86cd799439011"
+            },
+            body: {
+                nome: "Teste",
+                dataConclusao: "2999-11-09",
+                descricao: "teste",
+                concluida: true
+            }
+        }
+
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
+        }    
+
+        taskModel.findByIdAndUpdate.mockResolvedValue(req)
+        await taskController.mudarStatusTarefa(req, res)
+
+        expect(res.status).toHaveBeenCalledWith(200)
+        expect(res.json).toHaveBeenCalledWith(req)
+        expect(taskModel.findByIdAndUpdate).toHaveBeenCalledTimes(1)
+    })
+
+    it("Should fail if the task ID is in a invalid format", async() => {
+        const req = {
+            params: {
+                id: "123abc"
+            },
+            body: {
+                nome: "Teste",
+                dataConclusao: "2999-11-09",
+                descricao: "teste"
+            }
+        }
+
+        await expect(taskController.mudarStatusTarefa(req, {})).rejects.toMatchObject({
+            statusCode: 400,
+            message: "ID em formato inválido"
+        })
+        expect(taskModel.findByIdAndUpdate).not.toHaveBeenCalled()
+    })
+
+    it("Should fail if the task was not found", async() => {
+        const req = {
+            params: {
+                id: "507f1f77bcf86cd799439011"
+            },
+            body: {
+                nome: "Teste",
+                dataConclusao: "2999-11-09",
+                descricao: "teste"
+            }
+        }
+
+        taskModel.findByIdAndUpdate.mockResolvedValue(null)
+        
+        await expect(taskController.mudarStatusTarefa(req, {})).rejects.toMatchObject({
+            statusCode: 404,
+            message: "Tarefa não encontrada, verifique se o ID fornecido realmente existe!"
+        })
+        expect(taskModel.findByIdAndUpdate).toHaveBeenCalledTimes(1)
+    })
+
+    it("Should fail if the new task status is equal to the actual one (false)", async() => {
+        taskModel.findById.mockResolvedValue({
+            concluida: false
+        })
+
+        const req = {
+            params: {
+                id: "507f1f77bcf86cd799439011"
+            },
+            body: {
+                concluida: false
+            }
+        }
+
+        taskModel.findByIdAndUpdate.mockResolvedValue(req)
+        await expect(taskController.mudarStatusTarefa(req, {})).rejects.toMatchObject({
+            statusCode: 400,
+            message: "O status da tarefa é o mesmo da requisição. Nada mudou"
+        })
+        expect(taskModel.findByIdAndUpdate).not.toHaveBeenCalled()
+    })
+
+    it("Should fail if the new task status is equal to the actual one (true)", async() => {
+        taskModel.findById.mockResolvedValue({
+            concluida: true
+        })
+
+        const req = {
+            params: {
+                id: "507f1f77bcf86cd799439011"
+            },
+            body: {
+                concluida: true
+            }
+        }
+
+        taskModel.findByIdAndUpdate.mockResolvedValue(req)
+        await expect(taskController.mudarStatusTarefa(req, {})).rejects.toMatchObject({
+            statusCode: 400,
+            message: "O status da tarefa é o mesmo da requisição. Nada mudou"
+        })
+        expect(taskModel.findByIdAndUpdate).not.toHaveBeenCalled()
+    })
+
+    it("Should fail if something goes wrong with the server", async() => {
+        const req = {
+            params: {
+                id: "507f1f77bcf86cd799439011"
+            },
+            body: {
+                nome: "Teste",
+                dataConclusao: "2999-11-09",
+                descricao: "teste"
+            }
+        }
+
+        taskModel.findByIdAndUpdate.mockRejectedValue(new Error("Erro interno no servidor"))
+        await expect(taskController.mudarStatusTarefa(req, {})).rejects.toThrow("Erro interno no servidor")
+        expect(taskModel.findByIdAndUpdate).toHaveBeenCalledTimes(1)
     })
 })
