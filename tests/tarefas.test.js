@@ -9,8 +9,13 @@ jest.mock('../src/models/taskModel')
 
 describe("Show Tasks controller", () => {
     it("Should fail if something goes wrong with the server", async() => {
+        const req = {
+            user:{
+                id: '6afcab1b4cb1777e062989ae'
+            }
+        }
         taskModel.find.mockRejectedValue(new Error("Erro interno no servidor"))
-        await expect(taskController.mostrarTarefas()).rejects.toThrow("Erro interno no servidor")
+        await expect(taskController.mostrarTarefas(req, {})).rejects.toThrow("Erro interno no servidor")
         expect(taskModel.find).toHaveBeenCalledTimes(1)
     })
 })
@@ -27,6 +32,9 @@ describe("Add Tasks controller", () => {
                 dataConclusao: "2999-12-12",
                 descricao: "Realizar teste unitário para ver se a tarefa está sendo criada",
                 concluida: false
+            },
+            user:{
+                id: '6afcab1b4cb1777e062989ae'
             }
         }
 
@@ -41,7 +49,10 @@ describe("Add Tasks controller", () => {
         
         expect(res.json).toHaveBeenCalledTimes(1)
         expect(taskModel.create).toHaveBeenCalledTimes(1)
-        expect(taskModel.create).toHaveBeenCalledWith(req.body)
+        expect(taskModel.create).toHaveBeenCalledWith({
+            ...req.body,
+            idUsuario: req.user.id
+        })
         expect(res.status).toHaveBeenCalledWith(201)
     })
 
@@ -197,6 +208,9 @@ describe("Add Tasks controller", () => {
                 nome: "Testando validações",
                 dataConclusao: "2999-02-22",
                 descricao: "Testando validação"
+            },
+            user:{
+                id: '6afcab1b4cb1777e062989ae'
             }
         }
 
@@ -222,6 +236,9 @@ describe("Delete Tasks controller", () => {
                 dataConclusao: "2999-12-12",
                 descricao: "Realizar teste unitário para ver se a tarefa está sendo criada",
                 concluida: false
+            },
+            user:{
+                id: '6afcab1b4cb1777e062989ae'
             }
         }
 
@@ -236,7 +253,11 @@ describe("Delete Tasks controller", () => {
         expect(res.json).toHaveBeenCalledTimes(1)
         expect(res.status).toHaveBeenCalledWith(200)
         expect(taskModel.findByIdAndDelete).toHaveBeenCalledTimes(1)
-        expect(taskModel.findByIdAndDelete).toHaveBeenCalledWith(req.params.id)
+        expect(taskModel.findByIdAndDelete).toHaveBeenCalledWith({
+            _id: req.params.id,
+            idUsuario: req.user.id
+        })
+
     })
 
     it("Should fail if task id is not valid", async() => {
@@ -274,6 +295,9 @@ describe("Delete Tasks controller", () => {
                 dataConclusao: "2999-12-12",
                 descricao: "Realizar teste unitário para ver se a tarefa está sendo criada",
                 concluida: false
+            },
+            user:{
+                id: '6afcab1b4cb1777e062989ae'
             }
         }
 
@@ -295,6 +319,9 @@ describe("Delete Tasks controller", () => {
                 nome: "Teste",
                 dataConclusao: "2999-11-09",
                 descricao: "Testando deleção de tarefas"
+            },
+            user:{
+                id: '6afcab1b4cb1777e062989ae'
             }
         }
 
@@ -319,6 +346,9 @@ describe("Edit Tasks controller", () => {
                 nome: "Teste",
                 dataConclusao: "2999-11-09",
                 descricao: "teste"
+            },
+            user:{
+                id: '6afcab1b4cb1777e062989ae'
             }
         }
 
@@ -365,6 +395,9 @@ describe("Edit Tasks controller", () => {
                 dataConclusao: "2999-12-12",
                 descricao: "Realizar teste unitário para ver se a tarefa está sendo criada",
                 concluida: false
+            },
+            user:{
+                id: '6afcab1b4cb1777e062989ae'
             }
         }
 
@@ -386,6 +419,9 @@ describe("Edit Tasks controller", () => {
                 dataConclusao: "2999-12-12",
                 descricao: "Realizar teste unitário para ver se a tarefa está sendo criada",
                 concluida: false
+            },
+            user:{
+                id: '6afcab1b4cb1777e062989ae'
             }
         }
 
@@ -414,6 +450,9 @@ describe("Change Tasks status controller", () => {
                 dataConclusao: "2999-11-09",
                 descricao: "teste",
                 concluida: true
+            },
+            user:{
+                id: '6afcab1b4cb1777e062989ae'
             }
         }
 
@@ -458,6 +497,9 @@ describe("Change Tasks status controller", () => {
                 nome: "Teste",
                 dataConclusao: "2999-11-09",
                 descricao: "teste"
+            },
+            user:{
+                id: '6afcab1b4cb1777e062989ae'
             }
         }
 
@@ -481,6 +523,9 @@ describe("Change Tasks status controller", () => {
             },
             body: {
                 concluida: false
+            },
+            user:{
+                id: '6afcab1b4cb1777e062989ae'
             }
         }
 
@@ -503,6 +548,9 @@ describe("Change Tasks status controller", () => {
             },
             body: {
                 concluida: true
+            },
+            user:{
+                id: '6afcab1b4cb1777e062989ae'
             }
         }
 
@@ -523,6 +571,9 @@ describe("Change Tasks status controller", () => {
                 nome: "Teste",
                 dataConclusao: "2999-11-09",
                 descricao: "teste"
+            },
+            user:{
+                id: '6afcab1b4cb1777e062989ae'
             }
         }
 

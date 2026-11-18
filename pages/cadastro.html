@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem vindo(a)!</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/form.css">
+    <script src="https://kit.fontawesome.com/52ff4c741b.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="separador">
+        <main>
+            <div class="conteudo-formulario">
+                <h2>Task Manager</h2>
+                <p>Seja bem vindo(a)!</p>
+                <div class="formulario">
+                    <div class="campos-form" style="margin-bottom: 10px;">
+                        <label for="inew-user">Email</label>
+                        <input type="email" name="new-user" id="inew-user" placeholder="Ex: darthvader@gmail.com" autocomplete="email">
+                        <p id="user-msg" class="msg"></p>
+                    </div>
+                    <div class="campos-form">
+                        <label for="inew-password">Senha</label>
+                        <input type="password" name="new-password" id="inew-password" placeholder="Ex: ihatesand1234" autocomplete="current-password" class="input-senha">
+                        <i class="fa-regular fa-eye" id="ver-senha-cad"></i>
+                        <p id="pass-msg" class="msg"></p>
+                    </div>
+                </div>
+                <div class="botoes-formulario">
+                    <button id="btn-cadastro">Cadastrar</button>
+                </div>
+                <p>Já possui uma conta? <a href="login">Faça login!</a></p>
+            </div>
+        </main>
+    </div>
+    <footer>
+        <p>&copy; Site desenvolvido por: <a href="https://github.com/pedrogiacciani" target="_blank">Pedro Giacciani</a></p>
+    </footer>
+    <script type="module" src="scripts/cadastro.js"></script>
+</body>
+</html>

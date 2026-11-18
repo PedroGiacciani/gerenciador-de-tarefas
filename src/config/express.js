@@ -1,13 +1,32 @@
 const fs = require('fs')
 const express = require('express')
 const taskRouter = require('../routers/tarefas.js')
+const userRouter = require('../routers/users.js')
 const errMid = require('../middlewares/errorHandling.js')
 
 const app = express()
 app.use(express.static("./pages")) //Procura as páginas 
 app.use(express.json()) //Habilita o envio de json nas páginas
 
-app.get('/', (req, res) => { //Requisição que carrega a página principal do servidor
+app.get('/login', (req, res) => {
+    fs.readFile('./pages/login.html', "utf-8", (error, data) => {
+        if(error){
+            res.status(500).send(error.message)
+        }
+        res.status(200).send(data)
+    })
+})
+
+app.get('/cadastro', (req, res) => {
+    fs.readFile('./pages/cadastro.html', "utf-8", (error, data) => {
+        if(error){
+            res.status(500).send(error.message)
+        }
+        res.status(200).send(data)
+    })
+})
+
+app.get('/inicio', (req, res) => { //Requisição que carrega a página principal do servidor
     fs.readFile('./pages/index.html', 'utf-8', (error, data)=> { //FileSystem lê a página html e a envia 
         if(error){
             res.status(500).send(error.message)
@@ -17,6 +36,7 @@ app.get('/', (req, res) => { //Requisição que carrega a página principal do s
 })
 
 app.use("/tarefas", taskRouter)
+app.use("/users", userRouter)
 app.use(errMid)
 
 const port = 8080

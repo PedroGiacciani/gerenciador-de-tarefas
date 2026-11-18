@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem vindo(a)!</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/form.css">
+    <script src="https://kit.fontawesome.com/52ff4c741b.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="separador">
+        <main>
+            <div class="conteudo-formulario">
+                <h2>Task Manager</h2>
+                <p>Bem vindo(a) de volta!</p>
+                <div class="formulario">
+                    <div class="campos-form" style="margin-bottom: 10px;">
+                        <label for="iuser">Usuário</label>
+                        <input type="email" name="user" id="iuser" placeholder="Ex: darthvader@gmail.com" autocomplete="email">
+                        <p id="user-msg" class="msg"></p>
+                    </div>
+                    <div class="campos-form">
+                        <label for="ipassword">Senha</label>
+                        <input type="password" name="password" id="ipassword" placeholder="Ex: ihatesand1234" autocomplete="current-password" class="input-senha">
+                        <i class="fa-regular fa-eye" id="ver-senha-login"></i>
+                        <p id="pass-msg" class="msg"></p>
+                    </div>
+                </div>
+                <div class="botoes-formulario">
+                    <button id="btn-login">Entrar</button>
+                    <button id="btn-esqueci-senha">Esqueci minha senha</button>
+                </div>
+                <p>Ainda não tem uma conta? <a href="cadastro">Cadastre-se aqui!</a></p>
+            </div>
+        </main>
+    </div>
+    <footer>
+        <p>&copy; Site desenvolvido por: <a href="https://github.com/pedrogiacciani" target="_blank">Pedro Giacciani</a></p>
+    </footer>
+    <script src="scripts/login.js"></script>
+</body>
+</html>

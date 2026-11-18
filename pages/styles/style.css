@@ -59,6 +59,11 @@ button{
     font-size: 1.1em;
     color: var(--surface);
     cursor: pointer;
+    transition: background .2s;
+}
+
+button:hover{
+    background-color: var(--secondary);
 }
 
 div.modal{

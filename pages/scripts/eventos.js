@@ -19,6 +19,8 @@ var msgErro = document.getElementById('mensagem')
 var btnConfirma = document.getElementById('btn-confirma')
 var btnCancela = document.getElementById('btn-cancela')
 
+var token = localStorage.getItem('token')
+
 //Função para adicionar uma nova tarefa
 export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, modal){
     //Declaração de Variáveis
@@ -41,10 +43,11 @@ export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, moda
             const resposta = await fetch('http://localhost:8080/tarefas/adicionar-tarefa', { //Requisição POST para adicionar a tarefa
                 method: 'POST', //Método
                 headers: {
-                    'Content-Type': 'application/json' //Cabeçalho, indica o tipo de conteúdo que vai ser enviado via req
+                    'Content-Type': 'application/json', //Cabeçalho, indica o tipo de conteúdo que vai ser enviado via req
+                    'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(tarefa) //Envia a tarefa como corpo da req
-            })
+                body: JSON.stringify(tarefa), //Envia a tarefa como corpo da req
+            })  
             if(!resposta.ok){
                 throw new Error('Não foi possível concluir a solicitação no servidor')
             }
@@ -61,7 +64,11 @@ export async function carregarDados(){
     var areaListaTarefas = document.getElementById('lista-tarefas')
     areaListaTarefas.innerHTML = ``
     try{
-        const response = await fetch('http://localhost:8080/tarefas')
+        const response = await fetch('http://localhost:8080/tarefas', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
         var tarefas = await response.json()
         if(tarefas.length == 0){
             var msg = document.createElement('p')
@@ -164,7 +171,11 @@ function criarCardTarefa(element, areaListaTarefas){
 
 export async function excluirTodasTarefas(){
     try{
-        const response = await fetch('http://localhost:8080/tarefas')
+        const response = await fetch('http://localhost:8080/tarefas', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
         var tarefas = await response.json()
         if(tarefas.length == 0){
             alert('Nenhuma tarefa cadastrada para excluir!')
@@ -173,6 +184,9 @@ export async function excluirTodasTarefas(){
                 const promises = tarefas.map(element => {
                     return fetch(`http://localhost:8080/tarefas/deletar-tarefa/${element._id}`, {
                         method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
                     })
                 })
                 await Promise.all(promises)
@@ -193,6 +207,9 @@ async function excluirTarefa(element){
     if(confirm("A tarefa será excluída! Deseja mesmo continuar?")){
         try {
             const resposta = await fetch(`http://localhost:8080/tarefas/deletar-tarefa/${element._id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
                 method: 'DELETE'
             })
             if(!resposta.ok){
@@ -246,7 +263,8 @@ export async function editarTarefa(nomeTarefa, dataConclusao, descricao, modal){
             const promise = await fetch(`http://localhost:8080/tarefas/editar-tarefa/${idEditado}`, {
                 method: 'PATCH',
                 headers: {
-                    'Content-Type': 'application/json'  
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(tarefaEditada)
             })
@@ -269,9 +287,10 @@ async function mudarStatusTarefa(check, element){
         const concluirTarefa = await fetch(`http://localhost:8080/tarefas/mudar-status-tarefa/${element._id}`, {
             method: 'PATCH',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             }, 
-            body: JSON.stringify(tarefaConcluida)
+            body: JSON.stringify(tarefaConcluida),
         })
         if(!concluirTarefa.ok){
             throw new Error('Não foi possível concluir a solicitação no servidor')
@@ -288,7 +307,11 @@ export async function filtrarTarefas(filtro){
     try{
         var areaListaTarefas = document.getElementById('lista-tarefas')
         areaListaTarefas.innerHTML = ``
-        const tarefas = await fetch('http://localhost:8080/tarefas')
+        const tarefas = await fetch('http://localhost:8080/tarefas', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
         var todasTarefas = await tarefas.json()
         var msg = document.createElement('p')
         areaListaTarefas.appendChild(msg)
@@ -347,7 +370,11 @@ export async function filtrarTarefas(filtro){
 
 export async function pesquisarTarefa(valor){
     try{
-        const tarefas = await fetch('http://localhost:8080/tarefas')
+        const tarefas = await fetch('http://localhost:8080/tarefas', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
         var todasTarefas = await tarefas.json()
         var areaListaTarefas = document.getElementById('lista-tarefas')
 

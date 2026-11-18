@@ -11,7 +11,10 @@ var regexFev = /^(\d{4})-(0?2)-(3[01])$/
 var regexMesCom30 = /^(\d{4})-(0?[469]|11)-(31)$/
 
 const mostrarTarefas = async(req, res) => {
-    const tarefas = await taskModel.find({})
+    const idUsuario = req.user.id
+    const tarefas = await taskModel.find({
+        idUsuario: idUsuario
+    })
     return res.status(200).json(tarefas)
 }
 
@@ -44,7 +47,13 @@ const adicionarTarefa = async(req, res) => {
         throw error
     }
     
-    const tarefa = await taskModel.create(req.body)
+    const tarefa = await taskModel.create({
+        concluida: req.body.concluida,
+        dataConclusao: dataConclusao,
+        descricao: descricao,
+        nome: nome,
+        idUsuario: req.user.id
+    })
 
     return res.status(201).json(tarefa)
 }
@@ -54,7 +63,10 @@ const deletarTarefa = async(req, res) => {
     if(!mongoose.isObjectIdOrHexString(id)){
         taskErrors(1)
     }
-    const tarefaDeletada = await taskModel.findByIdAndDelete(id)
+    const tarefaDeletada = await taskModel.findByIdAndDelete({
+        _id: id,
+        idUsuario: req.user.id
+    })
     if(tarefaDeletada == null){
         taskErrors(2)
     }
@@ -66,7 +78,14 @@ const editarTarefa = async(req, res) => {
     if(!mongoose.isObjectIdOrHexString(id)){
         taskErrors(1)
     }
-    const tarefaEditada = await taskModel.findByIdAndUpdate(id, req.body, {returnDocument: 'after'})
+    const tarefaEditada = await taskModel.findByIdAndUpdate(
+        {
+            _id: id,
+            idUsuario: req.user.id  
+        }, 
+        req.body, 
+        {returnDocument: 'after'}
+    )
     if(tarefaEditada == null){
         taskErrors(2)
     }
@@ -78,7 +97,10 @@ const mudarStatusTarefa = async(req, res) => {
     if(!mongoose.isObjectIdOrHexString(id)){
         taskErrors(1)
     }
-    const statusTarefa = await taskModel.findById(id)
+    const statusTarefa = await taskModel.findById({
+        _id: id,
+        idUsuario: req.user.id
+    })
     if(req.body.concluida == statusTarefa.concluida){
         const error = new Error('O status da tarefa é o mesmo da requisição. Nada mudou')
         error.statusCode = 400

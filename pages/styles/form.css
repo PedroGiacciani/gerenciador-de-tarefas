@@ -1,0 +1,102 @@
+@charset "UTF-8";
+
+:root {
+  /* Cores principais */
+  --fundo: #F1F5F9;
+  --card: #FFFFFF;
+  --principal: #1E3A8A;
+  --secundario: #2563EB;
+  --texto: #1F2937;
+}
+
+*{
+    margin: 0px;
+    padding: 0px;
+}
+
+body{
+    background-color: var(--fundo);
+}
+
+div.separador{
+    height: 100%;
+}
+
+main{
+    margin: auto;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--texto);
+}
+
+main > div.conteudo-formulario{
+    background-color: var(--card);
+    border-radius: 10px;
+    padding: 15px;
+    width: 350px;
+    height: 450px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.103);
+}
+
+main > div.conteudo-formulario > h2{
+    text-align: center;
+    font-size: 2em;
+    color: var(--principal);
+}
+
+main > div.conteudo-formulario > div.formulario{
+    font-size: 1.2em;
+    line-height: 2em;
+}
+
+main > div.conteudo-formulario > div.formulario > label{
+    color: var(--principal);
+}
+
+main > div.conteudo-formulario > div.formulario > div.campos-form > input.input-senha{
+    width: 90%;
+}
+
+.fa-eye, .fa-eye-slash{
+    padding: 10px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+main > div.conteudo-formulario > p{
+    text-align: center;
+}
+
+main > div.conteudo-formulario > p > a{
+    color: var(--secundario);
+    text-decoration: none;
+}
+
+@media screen and (min-width: 450px) and (max-width: 549px){
+    main > div.conteudo-formulario{
+        width: 475px;
+    }
+}
+
+@media screen and (min-width: 550px) and (max-width: 849px){
+    main > div.conteudo-formulario{
+        width: 540px;
+    }
+}
+
+@media screen and (min-width: 850px) {
+    main > div.conteudo-formulario{
+        width: 800px;
+    }
+
+    main > div.conteudo-formulario > div.formulario > div.campos-form > input.input-senha{
+        width: 94%;
+    }
+}

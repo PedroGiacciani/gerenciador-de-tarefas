@@ -20,6 +20,11 @@ const taskSchema = new mongoose.Schema({ //Cria um modelo de tarefa para subir a
         required: true,
         trim: true,
     },
+    idUsuario: {
+        type: String,
+        required: true,
+        trim: true
+    }
 })
 
 const taskModel = mongoose.model('Tarefa', taskSchema) //Modela a tarefa utilizando o schema criado acima

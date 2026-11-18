@@ -1,6 +1,7 @@
 //Arquivo com todas as rotas das APIs
 const express = require('express')
 const router = express.Router()
+const authMid = require('../middlewares/authMiddleware')
 
 const {
     mostrarTarefas, 
@@ -9,6 +10,8 @@ const {
     editarTarefa,
     mudarStatusTarefa
 } = require('../controllers/taskControllers')
+
+router.use(authMid)
 
 router.get('/', mostrarTarefas) //Requisição que busca todas as tarefas cadastradas
 
