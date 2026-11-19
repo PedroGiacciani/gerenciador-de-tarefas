@@ -13,9 +13,15 @@ const authentication = (req, res, next) => {
         req.user = verificacao //Recebe o token no corpo da requisição para conferência
         return next() //Passa para o próximo middleware
     }catch(error){
-        const erro = new Error('Token inválido')
-        erro.statusCode = 401
-        return next(erro)
+        if(error.name === 'TokenExpiredError'){
+            const erro = new Error('Token expirado! Faça login novamente')
+            erro.statusCode = 401
+            return next(erro)
+        }else{
+            const erro = new Error('Token inválido!')
+            erro.statusCode = 401
+            return next(erro)
+        }
     }
 }
 

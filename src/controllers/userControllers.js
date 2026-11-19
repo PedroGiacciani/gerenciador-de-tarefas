@@ -46,8 +46,22 @@ const adicionarUsuario = async(req, res) => {
     }
 }
 
+const consultarUsuarios = async(req, res) => {
+    const users = await userModel.find({})
+    res.status(200).json(users)
+}
+
 const validarUsuario = async(req, res) => {
     const {email, password} = req.body
+    if(!email || email.trim() === ''){
+        const error = new Error('Usuário obrigatório *')
+        error.statusCode = 400
+        throw error
+    }else if(!password){
+        const error = new Error('Senha obrigatória *')
+        error.statusCode = 400
+        throw error
+    }
     const user = await userModel.findOne({ email })
     if(!user){
         const error = new Error('Usuário não encontrado')
@@ -76,5 +90,6 @@ const validarUsuario = async(req, res) => {
 
 module.exports = {
     adicionarUsuario,
+    consultarUsuarios,
     validarUsuario
 }

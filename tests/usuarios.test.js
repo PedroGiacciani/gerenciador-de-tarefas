@@ -1,5 +1,4 @@
 const userController = require("../src/controllers/userControllers")
-const taskModel = require("../src/models/taskModel")
 const userModel = require('../src/models/userModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -98,7 +97,7 @@ describe('Add Users controller', () => {
         expect(userModel.create).not.toHaveBeenCalled()
     })
     
-    it("Should fail with password is just spaces", async() => {
+    it("Should fail if password is just spaces", async() => {
         const req = {
             body: {
                 email: 'pedro@gmail.com',
@@ -164,12 +163,10 @@ describe('Validate Users controller', () => {
     })
 
     it("Should validate an user properly", async() => {
-        const senhaHash = await bcrypt.hash('pedro123', 10)
         const req = {
             body: {
                 email:'pedro@gmail.com',
                 password: 'pedro123',
-                _id: '123456'
             }
         }
 
@@ -178,24 +175,121 @@ describe('Validate Users controller', () => {
             json: jest.fn()
         }
 
-        var user = userModel.findOne.mockResolvedValue({
-            email: req.body.email,
-            password: senhaHash,
-            _id: req.body._id
-        })
-        await userController.validarUsuario(req, res)
-        const senhaArmazenada = userModel.findOne.mock.results[0].value.password
-        const resposta = res.json.mock.calls[0][0]
+        var senhaHash = await bcrypt.hash('pedro123', 10)
 
+        const user = {
+            email: req.body.email,
+            password: senhaHash
+        }
+
+        userModel.findOne.mockResolvedValue(user)
+
+        await userController.validarUsuario(req, res)
+        const resposta = res.json.mock.calls[0][0]
+        
         expect(resposta.token).toBeDefined()
         expect(typeof resposta.token).toBe('string')
 
         const decode = jwt.verify(resposta.token, process.env.JWT_SECRET)
         expect(decode.id).toBe(user._id)
 
-        expect(senhaArmazenada).not.toBe(req.body.password)
-        expect(await bcrypt.compare(req.body.password, senhaArmazenada)).toBe(true)
+        expect(user.password).not.toBe(req.body.password)
+        expect(await bcrypt.compare(req.body.password, user.password)).toBe(true)
         expect(res.status).toHaveBeenCalledWith(200)
+        expect(userModel.findOne).toHaveBeenCalledTimes(1)
+        expect(res.json).toHaveBeenCalledTimes(1)
+        expect(res.json).not.toHaveProperty('password')
+    })
+
+    it("Should fail without an email", async() => {
+        const req = {
+            body: {
+                email: '',
+                password: 'pedro123'
+            }
+        }
+
+        await expect(userController.validarUsuario(req, {})).rejects.toMatchObject({
+            statusCode: 400,
+            message: 'Usuário obrigatório *'
+        })
+        expect(userModel.findOne).not.toHaveBeenCalled()
+    })
+
+    it("Should fail if email is just spaces", async() => {
+        const req = {
+            body: {
+                email: '',
+                password: 'pedro123'
+            }
+        }
+
+        await expect(userController.validarUsuario(req, {})).rejects.toMatchObject({
+            statusCode: 400,
+            message: 'Usuário obrigatório *'
+        })
+        expect(userModel.findOne).not.toHaveBeenCalled()
+    })
+
+    it("Should fail without an password", async() => {
+        const req = {
+            body: {
+                email: 'pedro@gmail.com',
+                password: ''
+            }
+        }
+
+        await expect(userController.validarUsuario(req, {})).rejects.toMatchObject({
+            statusCode: 400,
+            message: 'Senha obrigatória *'
+        })
+        expect(userModel.findOne).not.toHaveBeenCalled()
+    })
+
+    it("Should fail if the user was not found", async() => {
+        const req = {
+            body: {
+                email: 'pedro@gmail.com',
+                password: 'pedro123'
+            }
+        }
+        userModel.findOne.mockResolvedValue(null)
+        await expect(userController.validarUsuario(req, {})).rejects.toMatchObject({
+            statusCode: 404,
+            message: "Usuário não encontrado"
+        })
+        expect(userModel.findOne).toHaveBeenCalledTimes(1)
+    })
+
+    it("Should fail if password is incorrect", async() => {
+        const req = {
+            body: {
+                email: 'pedro@gmail.com',
+                password: 'pedro1234'
+            }
+        }
+        const senhaHash = await bcrypt.hash('exemplo987', 10)
+        const falseUser = {
+            email: 'pedro@gmail.com',
+            password: senhaHash
+        }
+        userModel.findOne.mockResolvedValue(falseUser)
+        await expect(userController.validarUsuario(req, {})).rejects.toMatchObject({
+            statusCode: 401,
+            message: 'Usuário ou senha incorretos'
+        })
+        expect(userModel.findOne).toHaveBeenCalledTimes(1)
+    })
+
+    it("Should fail if something goes wrong with the server", async() => {
+        const req = {
+            body: {
+                email: 'pedro@gmail.com',
+                password: 'pedro123'
+            }
+        }
+        userModel.findOne.mockRejectedValue(new Error("Erro interno no servidor"))
+        await expect(userController.validarUsuario(req, {})).rejects.toThrow('Erro interno no servidor')
         expect(userModel.findOne).toHaveBeenCalledTimes(1)
     })
 })
