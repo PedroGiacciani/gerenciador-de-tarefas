@@ -5,6 +5,11 @@ const userRouter = require('../routers/users.js')
 const errMid = require('../middlewares/errorHandling.js')
 
 const app = express()
+
+app.get('/', (req, res) => {
+    res.redirect('/login')
+})
+
 app.use(express.static("./pages")) //Procura as páginas 
 app.use(express.json()) //Habilita o envio de json nas páginas
 
