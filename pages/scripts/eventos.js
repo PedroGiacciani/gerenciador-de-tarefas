@@ -40,7 +40,7 @@ export async function adicionarTarefa(nomeTarefa, dataConclusao, descricao, moda
         modal.classList.remove('aberto') //fecha o modal de cadastro de tarefa
         const tarefa = new Tarefa(nomeTarefa.toLowerCase(), dataConclusao, descricao, false) //Cria um objeto tarefa (apenas para modelar o envio ao Db)
         try{
-            const resposta = await fetch('http://localhost:8080/tarefas/adicionar-tarefa', { //Requisição POST para adicionar a tarefa
+            const resposta = await fetch('/tarefas/adicionar-tarefa', { //Requisição POST para adicionar a tarefa
                 method: 'POST', //Método
                 headers: {
                     'Content-Type': 'application/json', //Cabeçalho, indica o tipo de conteúdo que vai ser enviado via req
@@ -64,7 +64,7 @@ export async function carregarDados(){
     var areaListaTarefas = document.getElementById('lista-tarefas')
     areaListaTarefas.innerHTML = ``
     try{
-        const response = await fetch('http://localhost:8080/tarefas', {
+        const response = await fetch('/tarefas', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -171,7 +171,7 @@ function criarCardTarefa(element, areaListaTarefas){
 
 export async function excluirTodasTarefas(){
     try{
-        const response = await fetch('http://localhost:8080/tarefas', {
+        const response = await fetch('/tarefas', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -182,7 +182,7 @@ export async function excluirTodasTarefas(){
         }else{
             if(confirm("Atenção! Todas as tarefas serão excluidas! Deseja mesmo continuar?")){
                 const promises = tarefas.map(element => {
-                    return fetch(`http://localhost:8080/tarefas/deletar-tarefa/${element._id}`, {
+                    return fetch(`/tarefas/deletar-tarefa/${element._id}`, {
                         method: 'DELETE',
                         headers: {
                             'Authorization': `Bearer ${token}`
@@ -206,7 +206,7 @@ export async function excluirTodasTarefas(){
 async function excluirTarefa(element){
     if(confirm("A tarefa será excluída! Deseja mesmo continuar?")){
         try {
-            const resposta = await fetch(`http://localhost:8080/tarefas/deletar-tarefa/${element._id}`, {
+            const resposta = await fetch(`/tarefas/deletar-tarefa/${element._id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 },
@@ -260,7 +260,7 @@ export async function editarTarefa(nomeTarefa, dataConclusao, descricao, modal){
     }else{
         var tarefaEditada = new Tarefa(nomeTarefa, dataConclusao, descricao)
         try{
-            const promise = await fetch(`http://localhost:8080/tarefas/editar-tarefa/${idEditado}`, {
+            const promise = await fetch(`/tarefas/editar-tarefa/${idEditado}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -284,7 +284,7 @@ export async function editarTarefa(nomeTarefa, dataConclusao, descricao, modal){
 async function mudarStatusTarefa(check, element){
     try{
         const tarefaConcluida = new Tarefa(element.nome, element.dataConclusao, element.descricao, check.checked)
-        const concluirTarefa = await fetch(`http://localhost:8080/tarefas/mudar-status-tarefa/${element._id}`, {
+        const concluirTarefa = await fetch(`/tarefas/mudar-status-tarefa/${element._id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -307,7 +307,7 @@ export async function filtrarTarefas(filtro){
     try{
         var areaListaTarefas = document.getElementById('lista-tarefas')
         areaListaTarefas.innerHTML = ``
-        const tarefas = await fetch('http://localhost:8080/tarefas', {
+        const tarefas = await fetch('/tarefas', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -370,7 +370,7 @@ export async function filtrarTarefas(filtro){
 
 export async function pesquisarTarefa(valor){
     try{
-        const tarefas = await fetch('http://localhost:8080/tarefas', {
+        const tarefas = await fetch('/tarefas', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

@@ -35,9 +35,16 @@ app.get('/inicio', (req, res) => { //Requisição que carrega a página principa
     })
 })
 
+app.get('/health', (req, res) => {
+    res.status(200).json({
+        status: "OK",
+        message: "Servidor iniciado com sucesso"
+    })
+})
+
 app.use("/tarefas", taskRouter)
 app.use("/users", userRouter)
 app.use(errMid)
 
-const port = 8080
+const port = process.env.PORT || 8080
 app.listen(port, () => console.log(`Running in port ${port}`))

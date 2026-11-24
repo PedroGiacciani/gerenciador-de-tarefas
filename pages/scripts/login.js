@@ -32,7 +32,7 @@ btnLogin.addEventListener('click', async() => {
         passMsg.textContent = 'Campo obrigatório *'
     }else{
         try{
-            const resposta = await fetch('http://localhost:8080/users/validar-usuario', {
+            const resposta = await fetch('/users/validar-usuario', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

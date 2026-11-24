@@ -19,10 +19,6 @@ btnCadastro.addEventListener('click', async() => {
         password: senhaUsuario.value
     }
 
-    const req = await fetch('http://localhost:8080/users/consultar-usuarios')
-    const dados = await req.json()
-    const procurarUser = dados.find(e => e.email == user.email)
-
     if(!user.email || user.email.trim() === ''){
         userMsg.textContent = 'Campo obrigatório *'
     }else if(!regexEmail.test(user.email)){
@@ -33,23 +29,26 @@ btnCadastro.addEventListener('click', async() => {
         passMsg.textContent = 'A senha não pode conter apenas espaços*'
     }else if(user.password.length < 6){
         passMsg.textContent = 'A senha precisa ter no mínimo 6 caracteres *'
-    }else if(procurarUser){
-        alert("O usuário que está tentando cadastrar já está na plataforma! Faça login para continuar")
     }else{
         try{
-            const resposta = await fetch('http://localhost:8080/users/adicionar-usuario', {
+            const resposta = await fetch('/users/adicionar-usuario', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(user)
             })
+            console.log(resposta)
             if(!resposta.ok){
-                throw new Error("Não foi possível cadastrar usuário")
+                if(resposta.status == 400){
+                    throw new Error(`Esse e-mail já está sendo utilizado`)
+                }else{
+                    throw new Error(`Algo deu errado, tente novamente mais tarde`)
+                }
             }
             alert('Usuário cadastrado!')
         }catch(error){
-            console.log(`Não foi possível cadastrar usuário. ${error.message}`)
+            alert(`Não foi possível cadastrar. ${error.message}`)
         }
     }
 })
