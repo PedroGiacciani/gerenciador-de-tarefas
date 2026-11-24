@@ -30,7 +30,7 @@ const adicionarUsuario = async(req, res) => {
     }
 
     const user = await userModel.findOne({ email })
-    if(user.email == email){
+    if(user && user.email == email){
         const error = new Error("Usuário já cadastrado! Vá para a tela de login")
         error.statusCode = 400
         throw error
