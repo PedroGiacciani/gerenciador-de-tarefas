@@ -106,7 +106,14 @@ const mudarStatusTarefa = async(req, res) => {
         error.statusCode = 400
         throw error
     }
-    let mudarStatus = await taskModel.findByIdAndUpdate(id, req.body, {returnDocument: 'after'})
+    let mudarStatus = await taskModel.findByIdAndUpdate(
+        {
+            _id:id,
+            idUsuario: req.user.id
+        },
+        req.body,
+        {returnDocument: 'after', runValidators: true}
+    )
     if(mudarStatus == null){
         taskErrors(2)
     }

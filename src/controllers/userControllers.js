@@ -4,9 +4,8 @@ const jwt = require('jsonwebtoken')
 
 const adicionarUsuario = async(req, res) => {
     const {email, password} = req.body
-    const senhaHash = await bcrypt.hash(password, 10) //Hash de senha (criptografia)
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
+    
     if(!email || email.trim() === ''){
         const error = new Error("E-mail de usuário obrigatório")
         error.statusCode = 400
@@ -28,27 +27,32 @@ const adicionarUsuario = async(req, res) => {
         error.statusCode = 400
         throw error
     }
-
-    const user = await userModel.findOne({ email })
-    if(user && user.email == email){
+    
+    const emailNormalizado = email.trim().toLowerCase()
+    const user = await userModel.findOne({ email: emailNormalizado })
+    if(user){
         const error = new Error("Usuário já cadastrado! Vá para a tela de login")
-        error.statusCode = 400
+        error.statusCode = 409
         throw error
     }else{
-        const user = await userModel.create({
-            email: email,
-            password: senhaHash
-        })
-        return res.status(201).json({
-            message: 'Usuário criado com sucesso!',
-            email: user.email
-        })
+        try{
+            const senhaHash = await bcrypt.hash(password, 10) //Hash de senha (criptografia)
+            const user = await userModel.create({
+                email: email,
+                password: senhaHash
+            })
+            return res.status(201).json({
+                message: 'Usuário criado com sucesso!',
+                email: user.email
+            })
+        }catch(error){
+            if(error.code === 11000){
+                const duplicateError = new Error("Este e-mail já está cadastrado!")
+                duplicateError.statusCode = 409
+                throw duplicateError
+            }
+        }
     }
-}
-
-const consultarUsuarios = async(req, res) => {
-    const users = await userModel.find({})
-    res.status(200).json(users)
 }
 
 const validarUsuario = async(req, res) => {
@@ -90,6 +94,5 @@ const validarUsuario = async(req, res) => {
 
 module.exports = {
     adicionarUsuario,
-    consultarUsuarios,
     validarUsuario
 }

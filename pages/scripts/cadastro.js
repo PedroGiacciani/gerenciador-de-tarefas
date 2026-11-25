@@ -38,9 +38,8 @@ btnCadastro.addEventListener('click', async() => {
                 },
                 body: JSON.stringify(user)
             })
-            console.log(resposta)
             if(!resposta.ok){
-                if(resposta.status == 400){
+                if(resposta.status == 400 || resposta.status == 409){
                     throw new Error(`Esse e-mail já está sendo utilizado`)
                 }else{
                     throw new Error(`Algo deu errado, tente novamente mais tarde`)

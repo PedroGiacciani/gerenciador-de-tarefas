@@ -46,9 +46,13 @@ btnLogin.addEventListener('click', async() => {
             }
             if(!resposta){
                 throw new Error("Não foi possível validar o usuário")
+            }else if(!resposta.ok){
+                if(resposta.status == 401){
+                    throw new Error(`Usuário ou senha incorretos.`)
+                }
             }
         }catch(error){
-            console.log(`[ERRO]: ${error.message}`)
+            alert(`${error.message}`)
         }
     }
 })

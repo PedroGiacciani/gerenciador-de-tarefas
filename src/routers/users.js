@@ -8,7 +8,6 @@ const {
 } = require('../controllers/userControllers')
 
 router.post('/adicionar-usuario', adicionarUsuario)
-router.get('/consultar-usuarios', consultarUsuarios)
 router.post('/validar-usuario/', validarUsuario)
 
 module.exports = router
